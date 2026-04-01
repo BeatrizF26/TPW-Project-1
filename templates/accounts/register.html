@@ -1,0 +1,127 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+  .auth-container {
+    max-width: 450px;
+    margin: 3rem auto;
+    background: white;
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .auth-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--dark);
+    text-align: center;
+  }
+
+  .auth-subtitle {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.1);
+  }
+
+  .form-group select {
+    cursor: pointer;
+  }
+
+  .form-errors {
+    color: var(--secondary);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+  }
+
+  .btn-submit:hover {
+    background-color: #26a89e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3);
+  }
+
+  .auth-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #7f8c8d;
+  }
+
+  .auth-link a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+
+  .auth-link a:hover {
+    color: #26a89e;
+  }
+</style>
+
+<div class="auth-container">
+  <h2 class="auth-title">Cria a tua conta</h2>
+  <p class="auth-subtitle">Junta-te à BookMarket e começa a vender</p>
+
+  <form method="POST" novalidate>
+    {% csrf_token %} {% for field in form %}
+    <div class="form-group">
+      {% if field.label %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {% endif %} {{ field }} {% if field.errors %}
+      <div class="form-errors">{{ field.errors.0 }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="btn-submit">Criar conta</button>
+  </form>
+
+  <div class="auth-link">
+    Já tens conta? <a href="/accounts/login/">Entrar</a>
+  </div>
+</div>
+
+{% endblock %}

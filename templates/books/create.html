@@ -1,0 +1,135 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+  .form-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .form-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--dark);
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.1);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .form-group select {
+    cursor: pointer;
+  }
+
+  .form-errors {
+    color: var(--secondary);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .btn-submit {
+    flex: 1;
+    padding: 0.9rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-submit:hover {
+    background-color: #26a89e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3);
+  }
+
+  .btn-cancel {
+    flex: 1;
+    padding: 0.9rem;
+    background-color: var(--grey);
+    color: var(--text);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-cancel:hover {
+    background-color: #dee2e6;
+  }
+</style>
+
+<div class="form-container">
+  <h1 class="form-title">📖 Adicionar Livro</h1>
+
+  <form method="POST" novalidate>
+    {% csrf_token %} {% for field in form %}
+    <div class="form-group">
+      {% if field.label %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {% endif %} {{ field }} {% if field.errors %}
+      <div class="form-errors">{{ field.errors.0 }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">✓ Criar Livro</button>
+      <a href="/" class="btn-cancel">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
