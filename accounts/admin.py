@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import User, BuyerProfile, SellerProfile
 
-# Register your models here.
+admin.site.register(User)
+admin.site.register(BuyerProfile)
+admin.site.register(SellerProfile)
