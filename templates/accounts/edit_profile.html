@@ -1,0 +1,254 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+  .edit-profile-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .edit-profile-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #2ea89e 100%);
+    color: white;
+    padding: 2rem;
+  }
+
+  .edit-profile-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .edit-profile-content {
+    padding: 2rem;
+  }
+
+  .form-section {
+    margin-bottom: 2rem;
+  }
+
+  .form-section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .form-section-title span {
+    font-size: 1.5rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.75rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.1);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-action {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-save {
+    background: var(--primary);
+    color: white;
+  }
+
+  .btn-save:hover {
+    background: #26a89e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3);
+  }
+
+  .btn-cancel {
+    background: var(--grey);
+    color: var(--text);
+  }
+
+  .btn-cancel:hover {
+    background: #dee2e6;
+  }
+
+  .form-errors {
+    color: var(--secondary);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  @media (max-width: 768px) {
+    .edit-profile-container {
+      margin: 1rem;
+    }
+
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<div class="edit-profile-container">
+  <div class="edit-profile-header">
+    <h1 class="edit-profile-title">✏️ Editar Perfil</h1>
+  </div>
+
+  <div class="edit-profile-content">
+    <form method="POST" novalidate>
+      {% csrf_token %}
+
+      <!-- Informações do Utilizador -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <span>👤</span> Informações Pessoais
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="{{ user_form.email.id_for_label }}">Email</label>
+            {{ user_form.email }} {% if user_form.email.errors %}
+            <div class="form-errors">{{ user_form.email.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ user_form.first_name.id_for_label }}">Nome</label>
+            {{ user_form.first_name }} {% if user_form.first_name.errors %}
+            <div class="form-errors">{{ user_form.first_name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ user_form.last_name.id_for_label }}">Apelido</label>
+            {{ user_form.last_name }} {% if user_form.last_name.errors %}
+            <div class="form-errors">{{ user_form.last_name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ user_form.phone_number.id_for_label }}"
+              >Telefone</label
+            >
+            {{ user_form.phone_number }} {% if user_form.phone_number.errors %}
+            <div class="form-errors">{{ user_form.phone_number.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Perfil de Comprador -->
+      <div class="form-section">
+        <div class="form-section-title">
+          <span>🛍️</span> Perfil de Comprador
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="{{ buyer_form.address.id_for_label }}">Morada</label>
+            {{ buyer_form.address }} {% if buyer_form.address.errors %}
+            <div class="form-errors">{{ buyer_form.address.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ buyer_form.favorite_genres.id_for_label }}"
+              >Géneros Favoritos</label
+            >
+            {{ buyer_form.favorite_genres }} {% if
+            buyer_form.favorite_genres.errors %}
+            <div class="form-errors">
+              {{ buyer_form.favorite_genres.errors.0 }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Perfil de Vendedor -->
+      <div class="form-section">
+        <div class="form-section-title"><span>🏪</span> Perfil de Vendedor</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="{{ seller_form.iban.id_for_label }}">IBAN</label>
+            {{ seller_form.iban }} {% if seller_form.iban.errors %}
+            <div class="form-errors">{{ seller_form.iban.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div class="form-actions">
+        <button type="submit" class="btn-action btn-save">
+          ✓ Guardar Alterações
+        </button>
+        <a href="{% url 'profile' %}" class="btn-action btn-cancel"
+          >← Cancelar</a
+        >
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

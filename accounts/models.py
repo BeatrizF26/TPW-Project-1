@@ -28,9 +28,7 @@ class SellerProfile(models.Model):
         return f"Seller Profile: {self.user.username}"
 
 @receiver(post_save, sender=User)
-def manage_user_profiles(sender, instance, **kwargs):
-    BuyerProfile.objects.create(user=instance)
-    SellerProfile.objects.create(user=instance)
-
-    instance.buyer_profile.save()
-    instance.seller_profile.save()
+def manage_user_profiles(sender, instance, created, **kwargs):
+    if created:
+        BuyerProfile.objects.create(user=instance)
+        SellerProfile.objects.create(user=instance)

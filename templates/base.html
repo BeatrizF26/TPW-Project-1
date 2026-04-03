@@ -267,10 +267,26 @@
       <a href="/" class="nav-brand">📚 BookMarket</a>
       <div class="nav-links">
         {% if user.is_authenticated %}
-        <span style="color: var(--text); font-weight: 500"
-          >Olá, <strong>{{ user.username }}</strong></span
+        <a
+          href="/accounts/profile/"
+          style="color: var(--text); font-weight: 500; text-decoration: none"
+          >Olá, <strong>{{ user.username }}</strong></a
         >
-        <a href="/accounts/logout/" class="btn-logout">Sair</a>
+        <form method="post" action="/accounts/logout/" style="display: inline">
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="btn-logout"
+            style="
+              background: none;
+              border: none;
+              color: inherit;
+              cursor: pointer;
+            "
+          >
+            Sair
+          </button>
+        </form>
         {% else %}
         <a href="/accounts/login/">Entrar</a>
         <a href="/accounts/register/" class="btn-primary">Registar</a>
