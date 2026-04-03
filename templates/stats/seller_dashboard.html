@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h1 style="margin-bottom: 2rem;">Seller Dashboard</h1>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+
+        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-top: 4px solid var(--primary);">
+            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0;">Total Earned</p>
+            <h2 style="font-size: 2.5rem; margin: 0.5rem 0; color: var(--primary);">{{ total_earned }}€</h2>
+        </div>
+
+        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-top: 4px solid var(--secondary);">
+            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0;">Books Sold</p>
+            <h2 style="font-size: 2.5rem; margin: 0.5rem 0; color: var(--secondary);">{{ books_sold }}</h2>
+        </div>
+
+        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-top: 4px solid #3498db;">
+            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0;">Active Listings</p>
+            <h2 style="font-size: 2.5rem; margin: 0.5rem 0; color: #3498db;">{{ active_books }}</h2>
+        </div>
+    </div>
+
+    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+        <h3 style="margin-bottom: 1.5rem;">Recent Sales History</h3>
+        {% if sales_history %}
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #eee;">
+                        <th style="padding: 1rem 0;">Book Title</th>
+                        <th style="padding: 1rem 0;">Buyer</th>
+                        <th style="padding: 1rem 0;">Date</th>
+                        <th style="padding: 1rem 0;">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales_history %}
+                    <tr style="border-bottom: 1px solid #f9f9f9;">
+                        <td style="padding: 1rem 0;"><strong>{{ sale.book.title }}</strong></td>
+                        <td style="padding: 1rem 0;">{{ sale.buyer.username }}</td>
+                        <td style="padding: 1rem 0; color: #7f8c8d;">{{ sale.sale_date|date:"d/m/Y H:i" }}</td>
+                        <td style="padding: 1rem 0; font-weight: 700; color: var(--primary);">{{ sale.sale_price }}€</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="text-align: center; color: #7f8c8d; padding: 2rem;">No sales recorded yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

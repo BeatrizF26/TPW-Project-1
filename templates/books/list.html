@@ -8,6 +8,31 @@
   "
 >
   <h1>Livros à venda</h1>
+  <section style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+    <form method="GET" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label style="font-weight: 600; font-size: 0.85rem; color: #7f8c8d;">Pesquisar Título</label>
+        <input type="text" name="q" value="{{ query_params.q|default:'' }}" placeholder="Ex: Harry Potter..." style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label style="font-weight: 600; font-size: 0.85rem; color: #7f8c8d;">Género</label>
+        <input type="text" name="genre" value="{{ query_params.genre|default:'' }}" placeholder="Ex: Fantasia" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label style="font-weight: 600; font-size: 0.85rem; color: #7f8c8d;">Preço Máximo (€)</label>
+        <input type="number" name="max_price" value="{{ query_params.max_price|default:'' }}" step="0.01" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;">
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="submit" class="btn btn-primary" style="flex: 1; padding: 0.6rem; justify-content: center;">🔍 Filtrar</button>
+        <a href="{% url 'book_list' %}" class="btn" style="background: var(--grey); color: var(--text); padding: 0.6rem; text-decoration: none; border-radius: 6px;">Limpar</a>
+      </div>
+
+    </form>
+  </section>
   <a href="/create/" class="btn btn-add">➕ Adicionar Livro</a>
 </div>
 
@@ -17,18 +42,15 @@
   <div class="book">
     <div class="book-image">
       {% if book.image %}
-      <img
-        src="{{ book.image.url }}"
-        alt="{{ book.title }}"
-        style="width: 100%; height: 100%; object-fit: cover"
-      />
+        <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 100%; height: 100%; object-fit: cover" />
       {% else %} 📖 {% endif %}
     </div>
-    <div class="book-content">
-      <div class="book-title">{{ book.title }}</div>
-      <div class="book-author">por <strong>{{ book.author }}</strong></div>
-      <div class="book-seller">Publicado por: {{ book.seller.username }}</div>
-      <div class="book-price">{{ book.price }}</div>
+    <div class="book-content" style="text-align: center;">
+      <div class="book-title" style="margin-bottom: 1rem;">{{ book.title }}</div>
+
+      <a href="{% url 'book_detail' book.id %}" class="btn" style="width: 100%; justify-content: center; background-color: var(--primary); color: white;">
+         🔍 Ver Detalhes
+      </a>
     </div>
   </div>
   {% endfor %}

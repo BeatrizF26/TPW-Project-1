@@ -267,6 +267,11 @@
       <a href="/" class="nav-brand">📚 BookMarket</a>
       <div class="nav-links">
         {% if user.is_authenticated %}
+
+        <a href="{% url 'inbox' %}" style="display: flex; align-items: center; gap: 5px;">
+          Messages
+        </a>
+
         <a
           href="/accounts/profile/"
           style="color: var(--text); font-weight: 500; text-decoration: none"

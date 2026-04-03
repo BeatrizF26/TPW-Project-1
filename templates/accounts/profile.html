@@ -278,8 +278,37 @@
     </div>
     {% endif %}
 
+    <div class="profile-section">
+      <div class="section-title">
+        <span>📚</span> My Purchases
+      </div>
+      
+      {% if my_purchases %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          {% for purchase in my_purchases %}
+            <div class="info-card" style="border-left-color: var(--secondary);">
+              <div class="info-label">Purchased on {{ purchase.sale_date|date:"d/m/Y" }} </div>
+              <div class="info-value">{{ purchase.book.title }} </div>
+              <div style="font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-top: 0.5rem;">
+                {{ purchase.sale_price }}€
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="info-card">
+          <div class="info-value empty">You haven't bought any books yet.</div>
+        </div>
+      {% endif %}
+    </div>
+
     <!-- Ações -->
     <div class="profile-actions">
+      {% if user.is_seller %}
+        <a href="{% url 'seller_dashboard' %}" class="btn-action btn-primary-action" style="background: #3498db;">
+            📊 Sales Dashboard
+        </a>
+      {% endif %}
       <a href="/accounts/profile/edit/" class="btn-action btn-primary-action">✏️ Editar Perfil</a>
       <a href="/create/" class="btn-action btn-primary-action">📖 Adicionar Livro</a>
       <a href="/" class="btn-action btn-secondary-action">← Voltar</a>

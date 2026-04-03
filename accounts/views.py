@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, UserEditForm, BuyerProfileEditForm, SellerProfileEditForm
 from django.contrib.auth.decorators import login_required
+from books.models import Purchase
 
 def register(request):
     if request.method == 'POST':
@@ -16,9 +17,16 @@ def register(request):
 
     return render(request, 'accounts/register.html', {'form': form})
 
+
 @login_required
 def profile(request):
-    return render(request, 'accounts/profile.html', {'user': request.user})
+    my_purchases = Purchase.objects.filter(buyer=request.user).order_by('-sale_date')
+
+    context = {
+        'user': request.user,
+        'my_purchases': my_purchases
+    }
+    return render(request, 'accounts/profile.html', context)
 
 @login_required
 def edit_profile(request):

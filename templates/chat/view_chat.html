@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 80vh;">
+
+    <div style="padding: 1rem 1.5rem; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3 style="margin: 0;">{{ chat.book.title }}</h3>
+            <small>Conversation with
+                {% if request.user == chat.buyer %}{{ chat.seller.username }}{% else %}{{ chat.buyer.username }}{% endif %}
+            </small>
+        </div>
+        <a href="{% url 'inbox' %}" style="color: white; text-decoration: none; font-weight: 600;">✕ Close</a>
+    </div>
+
+    <div style="flex: 1; padding: 1.5rem; overflow-y: auto; background: #f0f2f5; display: flex; flex-direction: column; gap: 1rem;">
+        {% for msg in chat_messages %}
+            <div style="max-width: 70%; padding: 0.8rem 1rem; border-radius: 15px; font-size: 0.95rem; line-height: 1.4;
+                {% if msg.sender == request.user %}
+                    align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px;
+                {% else %}
+                    align-self: flex-start; background: white; color: var(--text); border-bottom-left-radius: 2px;
+                {% endif %}">
+                {{ msg.content }}
+                <div style="font-size: 0.7rem; margin-top: 0.4rem; opacity: 0.7; text-align: right;">
+                    {{ msg.timestamp|date:"H:i" }}
+                </div>
+            </div>
+        {% empty %}
+            <p style="text-align: center; color: #7f8c8d; margin-top: 2rem;">No messages yet. Say hello!</p>
+        {% endfor %}
+    </div>
+
+    <div style="padding: 1rem; background: white; border-top: 1px solid var(--border);">
+        <form method="POST" style="display: flex; gap: 0.5rem;">
+            {% csrf_token %}
+            <input type="text" name="content" placeholder="Write a message..." required
+                   style="flex: 1; padding: 0.8rem; border: 1px solid var(--border); border-radius: 25px; outline: none;">
+            <button type="submit" style="background: var(--primary); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                ➤
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

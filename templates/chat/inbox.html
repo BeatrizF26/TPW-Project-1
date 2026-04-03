@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="margin-bottom: 2rem;">My Messages</h1>
+
+    {% if chats %}
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            {% for chat in chats %}
+                <a href="{% url 'view_chat' chat.id %}" style="text-decoration: none; color: inherit;">
+                    <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; transition: transform 0.2s;"
+                         onmouseover="this.style.transform='translateX(10px)'"
+                         onmouseout="this.style.transform='translateX(0)'">
+
+                        <div style="display: flex; gap: 1.5rem; align-items: center;">
+                            <div style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                📖
+                            </div>
+
+                            <div>
+                                <h3 style="margin: 0;">{{ chat.book.title }}</h3>
+                                <p style="margin: 0.2rem 0 0; color: #7f8c8d; font-size: 0.9rem;">
+                                    {% if request.user == chat.buyer %}
+                                        Seller: <strong>{{ chat.seller.username }}</strong>
+                                    {% else %}
+                                        Buyer: <strong>{{ chat.buyer.username }}</strong>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="text-align: right;">
+                            <span style="font-size: 0.8rem; color: #bdc3c7;">{{ chat.created_at|date:"d M Y" }}</span>
+                            {% with last_msg=chat.messages.last %}
+                                {% if last_msg and not last_msg.is_read and last_msg.sender != request.user %}
+                                    <div style="background: var(--secondary); width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-left: 10px;"></div>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 4rem; background: white; border-radius: 12px;">
+            <p style="color: #7f8c8d; font-size: 1.2rem;">You don't have any conversations yet.</p>
+            <a href="{% url 'book_list' %}" style="color: var(--primary); font-weight: 600;">Browse books to start chatting</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
