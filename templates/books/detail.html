@@ -1,58 +1,83 @@
 {% extends 'base.html' %}
 {% block content %}
-<div style="max-width: 800px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; gap: 2rem; align-items: flex-start;">
 
-    <div style="flex: 1;">
-        {% if book.image %}
-            <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        {% else %}
-            <div style="width: 100%; height: 350px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 4rem; border-radius: 8px;">📖</div>
-        {% endif %}
+<style>
+  .btn-buttons-custom {
+      transition: all 0.3s ease;
+      background-color: transparent;
+    }
+
+    .btn-buttons-custom:hover {
+      background-color: rgba(46, 196, 182, 0.1) !important;
+      color: var(--primary) !important;
+      text-decoration: none !important;
+    }
+
+    .back-link-custom {
+    color: #7f8c8d;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .back-link-custom:hover {
+    text-decoration: underline !important;
+  }
+</style>
+
+
+<div style="max-width: 800px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <div style="display: flex; gap: 2rem; align-items: flex-start;">
+        <div style="flex: 1;">
+            {% if book.image %}
+                <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            {% else %}
+                <div style="width: 100%; height: 350px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 4rem; border-radius: 8px;">📖</div>
+            {% endif %}
+        </div>
+
+        <div style="flex: 1.5;">
+            <h1 style="margin-bottom: 0;">{{ book.title }}</h1>
+            <p style="margin-top: 0; color: #7f8c8d">By {{ book.author }}</p>
+
+            <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid #eee;">
+
+            <div style="margin-bottom: 2rem;">
+                <p style="margin-bottom: 0.5rem;"><strong>Genre:</strong> {{ book.genre }}</p>
+                <p style="margin-bottom: 0.5rem;"><strong>Condition:</strong> {{ book.get_condition_display }}</p>
+                <p style="margin-bottom: 0.5rem;"><strong>Seller:</strong> {{ book.seller.username }}</p>
+                <p style="margin-bottom: 0.5rem;"><strong>Price:</strong> {{ book.price }}€</p>
+                <p style="margin-bottom: 0.5rem;"><strong>Description:</strong></p>
+                <div style="padding: 1rem; background: #f8f9fa; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); font-size: 0.95rem; color: #555;">
+                    {{ book.description }}
+                </div>
+            </div>
+
+            <div>
+                <div style="display: flex; gap: 1rem;">
+                    {% if user.is_authenticated and not book.is_sold and book.seller != user %}
+                        <a href="{% url 'confirm_purchase' book.id %}"
+                           class="btn btn-buttons-custom"
+                           style="flex: 1; color: #7f8c8d; justify-content: center; font-weight: 700;">
+                            <i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Buy Now
+                        </a>
+
+                        <a href="{% url 'start_conversation' book.id %}" class="btn btn-buttons-custom" style="flex: 1; color: #7f8c8d; justify-content: center; font-weight: 700;">
+                            <i data-lucide="message-square" style="width: 18px; height: 18px;"></i> Contact Seller
+                        </a>
+                    {% elif not user.is_authenticated %}
+                        <a href="{% url 'login' %}" class="btn" style="width: 100%; background: var(--grey); color: var(--text); justify-content: center; text-decoration: none;">
+                            Login to Purchase
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div style="flex: 1.5;">
-        <h1>{{ book.title }}</h1>
-        <p style="color: #7f8c8d; font-size: 1.2rem;">by <strong>{{ book.author }}</strong></p>
-
-        <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid #eee;">
-
-        <div style="margin-bottom: 1.5rem;">
-            <p style="margin-bottom: 0.5rem;"><strong>Genre:</strong> {{ book.genre }}</p>
-            <p style="margin-bottom: 0.5rem;"><strong>Condition:</strong> {{ book.get_condition_display }}</p>
-            <p><strong>Seller:</strong> {{ book.seller.username }}</p>
-        </div>
-
-        <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Description</h3>
-        <p style="color: #555; line-height: 1.6;">{{ book.description }}</p>
-
-        <div style="margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <span style="font-size: 2.2rem; font-weight: 700; color: var(--primary);">{{ book.price }}€</span>
-
-                {% if book.is_sold %}
-                    <span style="background: var(--secondary); color: white; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">SOLD</span>
-                {% endif %}
-            </div>
-
-            <div style="display: flex; gap: 1rem;">
-                {% if user.is_authenticated and not book.is_sold and book.seller != user %}
-                    <a href="{% url 'buy_book' book.id %}" class="btn" style="flex: 1; background: var(--secondary); color: white; justify-content: center; font-weight: 700;">
-                        🛒 Buy Now
-                    </a>
-
-                    <a href="{% url 'start_conversation' book.id %}" class="btn" style="flex: 1; background: var(--primary); color: white; justify-content: center; font-weight: 700;">
-                        💬 Contact Seller
-                    </a>
-                {% elif not user.is_authenticated %}
-                    <a href="{% url 'login' %}" class="btn" style="width: 100%; background: var(--grey); color: var(--text); justify-content: center; text-decoration: none;">
-                        Login to Purchase
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-
-        <a href="{% url 'book_list' %}" style="display: block; margin-top: 1.5rem; text-align: center; color: #7f8c8d; text-decoration: none; font-size: 0.9rem;">
-            ← Back to listings
+    <div style="margin-top: 2.5rem; text-align: center; border-top: 1px solid #eee; padding-top: 1.5rem;">
+        <a href="{% url 'book_list' %}" class="back-link-custom">
+            <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Back to listings
         </a>
     </div>
 </div>

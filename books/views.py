@@ -2,9 +2,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import BookForm
 from django.contrib.auth.decorators import login_required
-from .models import Book, Purchase
+from .models import Book, Purchase, Review
 from django.contrib import messages
 
+@login_required
 def book_list(request):
     books = Book.objects.filter(is_sold=False)
 
@@ -72,3 +73,59 @@ def buy_book(request, book_id):
 def book_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     return render(request, 'books/detail.html', {'book': book})
+
+
+@login_required
+def my_purchases(request):
+    purchases = Purchase.objects.filter(buyer=request.user).select_related('book').order_by('-sale_date')
+    return render(request, 'books/purchases.html', {'purchases': purchases})
+
+
+@login_required
+def confirm_purchase(request, book_id):
+    book = get_object_or_404(Book, id=book_id, is_sold=False)
+
+    if request.method == 'POST':
+        book.is_sold = True
+        book.save()
+
+        Purchase.objects.create(
+            book=book,
+            buyer=request.user,
+            seller=book.seller,
+            sale_price=book.price
+        )
+
+        messages.success(request, f"You successfully bought '{book.title}'!")
+        return redirect('my_purchases')
+
+    return render(request, 'books/confirm_purchase.html', {'book': book})
+
+
+@login_required
+def leave_review(request, book_id):
+    book = get_object_or_404(Book, id=book_id, is_sold=True)
+
+    if not Purchase.objects.filter(book=book, buyer=request.user).exists():
+        messages.error(request, "You can only review books you have purchased.")
+        return redirect('my_purchases')
+
+    review = Review.objects.filter(book=book, buyer=request.user).first()
+
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        Review.objects.update_or_create(
+            book=book,
+            buyer=request.user,
+            defaults={
+                'rating': rating,
+                'comment': comment
+            }
+        )
+        return redirect('my_purchases')
+
+    return render(request, 'books/reviews.html', {
+        'book': book,
+        'review': review
+    })

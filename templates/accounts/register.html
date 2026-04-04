@@ -102,8 +102,8 @@
 </style>
 
 <div class="auth-container">
-  <h2 class="auth-title">Cria a tua conta</h2>
-  <p class="auth-subtitle">Junta-te à BookMarket e começa a vender</p>
+  <h2 class="auth-title">Create an account</h2>
+  <p class="auth-subtitle">Join BookMarket and start selling</p>
 
   <form method="POST" novalidate>
     {% csrf_token %} {% for field in form %}
@@ -116,11 +116,11 @@
     </div>
     {% endfor %}
 
-    <button type="submit" class="btn-submit">Criar conta</button>
+    <button type="submit" class="btn-submit">Create account</button>
   </form>
 
   <div class="auth-link">
-    Já tens conta? <a href="/accounts/login/">Entrar</a>
+    Already has an account? <a href="/accounts/login/">Login</a>
   </div>
 </div>
 

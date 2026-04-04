@@ -14,6 +14,7 @@
       :root {
         --primary: #2ec4b6;
         --secondary: #ff6b6b;
+        --primarydark: #29b0a3;
         --dark: #1a1a1a;
         --light: #f8f9fa;
         --grey: #e9ecef;
@@ -97,6 +98,28 @@
       .nav-links .btn-primary:hover {
         background-color: #26a89e;
         color: white;
+      }
+
+      .nav-item {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: none;
+        border: none;
+        font-family: inherit;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      .nav-item:hover {
+        color: var(--primary) !important; 
+        background-color: rgba(46, 196, 182, 0.1);
       }
 
       /* Container */
@@ -261,44 +284,42 @@
         }
       }
     </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
   </head>
   <body>
     <nav>
-      <a href="/" class="nav-brand">📚 BookMarket</a>
+      <a href="{% url 'book_list' %}" class="nav-brand">📚 BookMarket</a>
       <div class="nav-links">
         {% if user.is_authenticated %}
-
-        <a href="{% url 'inbox' %}" style="display: flex; align-items: center; gap: 5px;">
-          Messages
+        <a href="/accounts/profile/" class="nav-item">
+          <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+          <span>Hi, <strong>{{ user.username }}</strong></span>
         </a>
 
-        <a
-          href="/accounts/profile/"
-          style="color: var(--text); font-weight: 500; text-decoration: none"
-          >Olá, <strong>{{ user.username }}</strong></a
-        >
+        <a href="{% url 'inbox' %}" class="nav-item">
+          <i data-lucide="message-square" style="width: 18px; height: 18px;"></i>
+          <span>Messages</span>
+        </a>
+
+        <a href="{% url 'my_purchases' %}" class="nav-item">
+          <i data-lucide="shopping-bag" style="width: 18px; height: 18px;"></i>
+          <span>Purchases</span>
+        </a>
+
         <form method="post" action="/accounts/logout/" style="display: inline">
-          {% csrf_token %}
-          <button
-            type="submit"
-            class="btn-logout"
-            style="
-              background: none;
-              border: none;
-              color: inherit;
-              cursor: pointer;
-            "
-          >
-            Sair
-          </button>
+            {% csrf_token %}
+            <button type="submit" class="nav-item">
+              <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+              <span>Logout</span>
+            </button>
         </form>
-        {% else %}
-        <a href="/accounts/login/">Entrar</a>
-        <a href="/accounts/register/" class="btn-primary">Registar</a>
         {% endif %}
       </div>
     </nav>
 
     <div class="container">{% block content %}{% endblock %}</div>
+    <script>
+      lucide.createIcons();
+    </script>
   </body>
 </html>

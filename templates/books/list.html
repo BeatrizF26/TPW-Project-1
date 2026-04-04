@@ -1,40 +1,96 @@
-{% extends 'base.html' %} {% block content %}
-<div
-  style="
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  "
->
-  <h1>Livros à venda</h1>
-  <section style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-    <form method="GET" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
+{% extends 'base.html' %}
+{% block content %}
 
-      <div class="form-group" style="margin-bottom: 0;">
-        <label style="font-weight: 600; font-size: 0.85rem; color: #7f8c8d;">Pesquisar Título</label>
-        <input type="text" name="q" value="{{ query_params.q|default:'' }}" placeholder="Ex: Harry Potter..." style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;">
-      </div>
+<style>
+  .btn-search-custom:hover {
+    background-color: #3CB371 !important;
+    color: white !important;
+  }
 
-      <div class="form-group" style="margin-bottom: 0;">
-        <label style="font-weight: 600; font-size: 0.85rem; color: #7f8c8d;">Género</label>
-        <input type="text" name="genre" value="{{ query_params.genre|default:'' }}" placeholder="Ex: Fantasia" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;">
-      </div>
+  .btn-clean-custom:hover {
+    background-color: var(--secondary) !important;
+    color: white !important;
+  }
 
-      <div class="form-group" style="margin-bottom: 0;">
-        <label style="font-weight: 600; font-size: 0.85rem; color: #7f8c8d;">Preço Máximo (€)</label>
-        <input type="number" name="max_price" value="{{ query_params.max_price|default:'' }}" step="0.01" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;">
-      </div>
+  .btn-details-custom {
+    background-color: var(--primary);
+    color: white;
+    transition: background-color 0.3s ease;
+    border: none !important;
+  }
 
-      <div style="display: flex; gap: 0.5rem;">
-        <button type="submit" class="btn btn-primary" style="flex: 1; padding: 0.6rem; justify-content: center;">🔍 Filtrar</button>
-        <a href="{% url 'book_list' %}" class="btn" style="background: var(--grey); color: var(--text); padding: 0.6rem; text-decoration: none; border-radius: 6px;">Limpar</a>
-      </div>
+  .btn-details-custom:hover {
+    background-color: var(--primarydark);
+    text-decoration: none !important;
+  }
+</style>
 
-    </form>
-  </section>
-  <a href="/create/" class="btn btn-add">➕ Adicionar Livro</a>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; width: 100%;">
+  <h1 style="margin: 0; line-height: 1; display: flex; align-items: center;">Books for sale</h1>
+  {% if user.is_seller %}
+    <a href="{% url 'create_book' %}" class="btn btn-add" style="margin: 0; display: flex; align-items: center; height: fit-content;">
+      <i data-lucide="book-plus"></i>  Add Book
+    </a>
+  {% endif %}
 </div>
+
+<section style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); width: 100%; box-sizing: border-box;">
+  <form method="GET" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 1.5rem; align-items: end;">
+
+    <div class="form-group" style="margin-bottom: 0;">
+      <label style="display: block; font-weight: 600; font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.5rem;">Title</label>
+      <input type="text" name="q" value="{{ query_params.q|default:'' }}" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px;">
+    </div>
+
+    <div class="form-group" style="margin-bottom: 0;">
+      <label style="display: block; font-weight: 600; font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.5rem;">Gender</label>
+      <input type="text" name="genre" value="{{ query_params.genre|default:'' }}" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px;">
+    </div>
+
+    <div class="form-group" style="margin-bottom: 0;">
+      <label style="display: block; font-weight: 600; font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.5rem;">Max Price (€)</label>
+      <input type="number" name="max_price" value="{{ query_params.max_price|default:'' }}" step="0.01" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px;">
+    </div>
+
+    <div style="display: flex; gap: 0.5rem;">
+      <button type="submit"
+              class="btn btn-primary btn-search-custom"
+              style="background: #DCDCDC;
+                     color: #2c3e50;
+                     padding: 0.75rem 1.5rem;
+                     justify-content: center;
+                     font-weight: 700 !important;
+                     border: none;
+                     cursor: pointer;
+                     font-family: inherit;
+                     font-size: 0.95rem;
+                     line-height: 1.2;
+                     display: flex;
+                     align-items: center;">
+        Search
+      </button>
+
+      <a href="{% url 'book_list' %}"
+         class="btn btn-clean-custom"
+         style="background: #DCDCDC;
+                color: #2c3e50;
+                padding: 0.75rem 1.5rem;
+                text-decoration: none;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700 !important;
+                font-family: inherit;
+                font-size: 0.95rem;
+                line-height: 1.2;
+                border: none;">
+        Clean
+      </a>
+    </div>
+
+  </form>
+</section>
 
 {% if books %}
 <div class="books-grid">
@@ -47,9 +103,17 @@
     </div>
     <div class="book-content" style="text-align: center;">
       <div class="book-title" style="margin-bottom: 1rem;">{{ book.title }}</div>
-
-      <a href="{% url 'book_detail' book.id %}" class="btn" style="width: 100%; justify-content: center; background-color: var(--primary); color: white;">
-         🔍 Ver Detalhes
+      <a href="{% url 'book_detail' book.id %}"
+         class="btn btn-details-custom"
+         style="width: 100%;
+                justify-content: center;
+                display: flex;
+                align-items: center;
+                padding: 0.75rem;
+                border-radius: 8px;
+                font-weight: 700 !important;
+                text-decoration: none;">
+         See Details
       </a>
     </div>
   </div>
@@ -58,9 +122,7 @@
 {% else %}
 <div class="empty-state">
   <div class="empty-state-icon">📚</div>
-  <p>Nenhum livro disponível no momento</p>
-  <p style="margin-top: 1rem; font-size: 0.9rem; color: #95a5a6">
-    Seja o primeiro a adicionar um livro!
-  </p>
+  <p>No book available in the moment</p>
 </div>
-{% endif %} {% endblock %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .rating-wrapper {
+        position: relative;
+        display: inline-flex;
+        font-size: 2rem;
+        margin: 1rem 0;
+        user-select: none;
+    }
+
+    .stars-grey {
+        display: flex;
+        color: #bdc3c7;
+    }
+
+    .stars-gold {
+        display: flex;
+        color: #f1c40f;
+        position: absolute;
+        top: 0;
+        left: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 0%;
+        transition: width 0.3s ease;
+    }
+
+    .star-icon {
+        width: 35px;
+        height: 35px;
+        flex-shrink: 0;
+    }
+</style>
+
+<div style="max-width: 500px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center;">Rate your purchase</h2>
+    <p style="color: #7f8c8d; text-align: center;">How was your experience with <strong>{{ book.title }}</strong>?</p>
+
+    <form method="POST" style="margin-top: 2rem; text-align: center;">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">
+                Rating (1.0 to 5.0)
+            </label>
+            <input type="number"
+               name="rating"
+               id="ratingInput"
+               step="0.1"
+               min="1"
+               max="5"
+               placeholder="0.0"
+               required
+               value="{{ review.rating|default:'' }}"
+               style="width: 120px; display: block; margin: 0 auto; padding: 0.75rem; text-align: center; font-size: 1.5rem; font-weight: 800; border: 2px solid var(--primary); border-radius: 12px; outline: none;">
+        </div>
+
+        <div class="rating-wrapper">
+            <div class="stars-grey">
+                <i data-lucide="star" class="star-icon"></i>
+                <i data-lucide="star" class="star-icon"></i>
+                <i data-lucide="star" class="star-icon"></i>
+                <i data-lucide="star" class="star-icon"></i>
+                <i data-lucide="star" class="star-icon"></i>
+            </div>
+            <div class="stars-gold" id="goldLayer">
+                <i data-lucide="star" class="star-icon" fill="currentColor"></i>
+                <i data-lucide="star" class="star-icon" fill="currentColor"></i>
+                <i data-lucide="star" class="star-icon" fill="currentColor"></i>
+                <i data-lucide="star" class="star-icon" fill="currentColor"></i>
+                <i data-lucide="star" class="star-icon" fill="currentColor"></i>
+            </div>
+        </div>
+
+        <div style="text-align: left; margin-top: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Comment</label>
+            <textarea name="comment" rows="4" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1.5rem; font-family: inherit; resize: vertical;">{{ review.comment|default:'' }}</textarea>
+        </div>
+
+        <button type="submit" class="btn" style="width: 100%; background: var(--primary); color: white; justify-content: center; font-weight: 700; padding: 1rem; border-radius: 8px;">
+            {% if review %}Update Review{% else %}Submit Review{% endif %}
+        </button>
+    </form>
+</div>
+
+<script>
+    const ratingInput = document.getElementById('ratingInput');
+    const goldLayer = document.getElementById('goldLayer');
+
+    function updateStarsView(value) {
+        let val = parseFloat(value);
+        if (isNaN(val)) val = 0;
+        if (val > 5) val = 5;
+        if (val < 0) val = 0;
+
+        const percentage = (val / 5) * 100;
+        goldLayer.style.width = percentage + "%";
+    }
+
+    ratingInput.addEventListener('input', (e) => {
+        updateStarsView(e.target.value);
+    });
+
+    window.addEventListener('load', () => {
+        if (ratingInput.value) updateStarsView(ratingInput.value);
+        if (window.lucide) lucide.createIcons();
+    });
+</script>
+
+{% endblock %}

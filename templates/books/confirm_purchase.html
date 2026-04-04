@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Botão Confirmar */
+    .btn-confirm {
+        background: var(--primary);
+        color: white;
+        justify-content: center;
+        padding: 1rem;
+        font-size: 1.1rem;
+        width: 100%;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-confirm:hover {
+        background-color: var(--primarydark); /* Escurece para o primarydark */
+    }
+
+    /* Link Cancelar */
+    .btn-cancel-link {
+        text-decoration: none;
+        color: #7f8c8d;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+
+    .btn-cancel-link:hover {
+        color: var(--secondary) !important;
+    }
+</style>
+
+<div style="max-width: 500px; margin: 0rem auto;">
+    <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); text-align: center;">
+
+        <div style="background: rgba(46, 196, 182, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+            <i data-lucide="shopping-cart" style="width: 30px; height: 30px; color: var(--primary);"></i>
+        </div>
+
+        <h2 style="margin-bottom: 1rem; color: var(--dark);">Confirm Purchase</h2>
+        <p style="color: #7f8c8d; margin-bottom: 2rem;">
+            Are you sure you want to buy <strong>{{ book.title }}</strong>?
+        </p>
+
+        <div style="background: var(--light); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; text-align: left;">
+            <div style="width: 60px; height: 80px; background: #ddd; border-radius: 4px; overflow: hidden; flex-shrink: 0;">
+                {% if book.image %}
+                    <img src="{{ book.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%;">📖</div>
+                {% endif %}
+            </div>
+            <div>
+                <h4 style="margin: 0; font-size: 1.1rem;">{{ book.title }}</h4>
+                <p style="margin: 0; color: var(--primary); font-weight: 700; font-size: 1.2rem;">{{ book.price }}€</p>
+                <p style="margin: 0; font-size: 0.85rem; color: #95a5a6;">Seller: {{ book.seller.username }}</p>
+            </div>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <button type="submit" class="btn btn-confirm">
+                    Confirm & Pay
+                </button>
+
+                <a href="{% url 'book_detail' book.id %}" class="btn-cancel-link">
+                    Cancel and go back
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div style="margin-top: 1.5rem; text-align: center; color: #bdc3c7; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 5px;">
+        <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+        Secure transaction by BookMarket
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+{% endblock %}

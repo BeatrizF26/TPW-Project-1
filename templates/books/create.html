@@ -112,7 +112,7 @@
 </style>
 
 <div class="form-container">
-  <h1 class="form-title">📖 Adicionar Livro</h1>
+  <h1 class="form-title">Add Book</h1>
 
   <form method="POST" enctype="multipart/form-data" novalidate>
     {% csrf_token %} {% for field in form %}
@@ -126,8 +126,8 @@
     {% endfor %}
 
     <div class="form-actions">
-      <button type="submit" class="btn-submit">✓ Criar Livro</button>
-      <a href="/" class="btn-cancel">Cancelar</a>
+      <button type="submit" class="btn-submit">Create Book</button>
+      <a href="/" class="btn-cancel">Cancel</a>
     </div>
   </form>
 </div>

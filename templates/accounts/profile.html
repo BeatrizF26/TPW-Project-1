@@ -54,6 +54,15 @@
     margin-bottom: 2rem;
   }
 
+  .profile-container {
+    max-width: 900px;
+    margin: 0rem auto;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
   .section-title {
     font-size: 1.3rem;
     font-weight: 700;
@@ -64,6 +73,17 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  .icon-info { color: var(--primary); }
+  .icon-buyer { color: var(--secondary); }
+  .icon-seller { color: #f39c12; }
+  .icon-edit { color: #636e72; }
+
+  .section-title svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2.5px;
   }
 
   .section-title span {
@@ -187,131 +207,93 @@
     <div class="profile-avatar">👤</div>
     <div class="profile-username">{{ user.username }}</div>
     <div class="profile-user-type">
-      {% if user.is_seller %}🏪 Vendedor{% else %}🛍️ Comprador{% endif %}
+      {% if user.is_seller %}Seller{% else %}Buyer{% endif %}
     </div>
   </div>
 
   <div class="profile-content">
-    <!-- Informações Gerais -->
+
     <div class="profile-section">
       <div class="section-title">
-        <span>ℹ️</span> Informações Gerais
+        <i data-lucide="info" class="icon-info"></i> General Information
       </div>
       <div class="profile-grid">
         <div class="info-card">
           <div class="info-label">Email</div>
           <div class="info-value {% if not user.email %}empty{% endif %}">
-            {{ user.email|default:"Não definido" }}
+            {{ user.email|default:"Not defined" }}
           </div>
         </div>
         <div class="info-card">
-          <div class="info-label">Telefone</div>
+          <div class="info-label">Name</div>
+          <div class="info-value {% if not user.first_name %}empty{% endif %}">
+            {{ user.get_full_name|default:"Not defined" }}
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Phone</div>
           <div class="info-value {% if not user.phone_number %}empty{% endif %}">
-            {{ user.phone_number|default:"Não definido" }}
-          </div>
-        </div>
-        <div class="info-card">
-          <div class="info-label">Nome Completo</div>
-          <div class="info-value {% if not user.first_name and not user.last_name %}empty{% endif %}">
-            {% if user.first_name or user.last_name %}
-              {{ user.first_name }} {{ user.last_name }}
-            {% else %}
-              Não definido
-            {% endif %}
+            {{ user.phone_number|default:"Not defined" }}
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Perfil de Comprador -->
-    {% if user.buyer_profile %}
+    {% if not user.is_seller and user.buyer_profile %}
     <div class="profile-section">
       <div class="section-title">
-        <span>🛍️</span> Perfil de Comprador
+        <i data-lucide="shopping-bag" class="icon-buyer"></i> Buyer Profile
       </div>
       <div class="profile-grid">
         <div class="info-card">
-          <div class="info-label">Morada</div>
+          <div class="info-label">Shipping address</div>
           <div class="info-value {% if not user.buyer_profile.address %}empty{% endif %}">
-            {{ user.buyer_profile.address|default:"Não definida" }}
+            {{ user.buyer_profile.address|default:"Not defined" }}
           </div>
         </div>
         <div class="info-card">
-          <div class="info-label">Géneros Favoritos</div>
+          <div class="info-label">Favorite Genres</div>
           <div class="info-value {% if not user.buyer_profile.favorite_genres %}empty{% endif %}">
-            {{ user.buyer_profile.favorite_genres|default:"Não definidos" }}
+            {{ user.buyer_profile.favorite_genres|default:"Not defined" }}
           </div>
         </div>
       </div>
     </div>
     {% endif %}
 
-    <!-- Perfil de Vendedor -->
-    {% if user.seller_profile %}
+    {% if user.is_seller %}
     <div class="profile-section">
       <div class="section-title">
-        <span>🏪</span> Perfil de Vendedor
+        <i data-lucide="store" class="icon-seller"></i> Seller Profile
       </div>
       <div class="profile-grid">
         <div class="info-card">
-          <div class="info-label">IBAN</div>
-          <div class="info-value {% if not user.seller_profile.iban %}empty{% endif %}">
+          <div class="info-label">IBAN para Recebimento</div>
+          <div class="info-value">
             {% if user.seller_profile.iban %}
               {{ user.seller_profile.iban|truncatechars:20 }}
             {% else %}
-              Não definido
+              <span class="empty">Não definido</span>
             {% endif %}
           </div>
         </div>
         <div class="info-card">
-          <div class="info-label">Classificação</div>
+          <div class="info-label">Reputation</div>
           <div class="info-value">
-            <div class="rating-stars">
-              {% for i in "12345" %}
+            <div class="rating-stars" style="color: #f39c12;">
+              {% for i in "12345"|make_list %}
                 {% if forloop.counter <= user.seller_profile.seller_rating %}⭐{% else %}☆{% endif %}
               {% endfor %}
             </div>
-            {{ user.seller_profile.seller_rating }}/5.00
           </div>
         </div>
       </div>
     </div>
     {% endif %}
 
-    <div class="profile-section">
-      <div class="section-title">
-        <span>📚</span> My Purchases
-      </div>
-      
-      {% if my_purchases %}
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-          {% for purchase in my_purchases %}
-            <div class="info-card" style="border-left-color: var(--secondary);">
-              <div class="info-label">Purchased on {{ purchase.sale_date|date:"d/m/Y" }} </div>
-              <div class="info-value">{{ purchase.book.title }} </div>
-              <div style="font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-top: 0.5rem;">
-                {{ purchase.sale_price }}€
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <div class="info-card">
-          <div class="info-value empty">You haven't bought any books yet.</div>
-        </div>
-      {% endif %}
-    </div>
-
-    <!-- Ações -->
     <div class="profile-actions">
-      {% if user.is_seller %}
-        <a href="{% url 'seller_dashboard' %}" class="btn-action btn-primary-action" style="background: #3498db;">
-            📊 Sales Dashboard
-        </a>
-      {% endif %}
-      <a href="/accounts/profile/edit/" class="btn-action btn-primary-action">✏️ Editar Perfil</a>
-      <a href="/create/" class="btn-action btn-primary-action">📖 Adicionar Livro</a>
-      <a href="/" class="btn-action btn-secondary-action">← Voltar</a>
+      <a href="/accounts/profile/edit/" class="btn-action btn-secondary-action">Edit profile</a>
+
     </div>
   </div>
 </div>

@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .info-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--secondary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .review-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease;
+    background: #fdfdfd;
+    border-radius: 0 0 12px 12px;
+    margin-top: -5px;
+    border: 1px solid #eee;
+    border-top: none;
+  }
+
+  .review-details.open {
+    max-height: 200px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-see-review {
+    background: #f8f9fa;
+    color: var(--text);
+    border: 1px solid #ddd;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .btn-see-review:hover {
+    background: #eee;
+  }
+
+  .stars-gold {
+    color: #f1c40f;
+    font-size: 1.1rem;
+  }
+
+  .btn-rate {
+    background: var(--primary);
+    color: white;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    border: none;
+  }
+
+  .btn-rate:hover {
+    background: var(--primarydark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.2);
+    color: white;
+  }
+
+  .btn-edit-small {
+    color: #95a5a6;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+  }
+
+  .btn-edit-small:hover {
+    color: var(--primary);
+    text-decoration: underline !important;
+  }
+</style>
+
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="margin-bottom: 2rem;">My Purchases</h1>
+
+    {% for p in purchases %}
+    <div style="margin-bottom: 1rem;">
+        <div class="info-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 1.5rem; align-items: center;">
+                    <div style="width: 50px; height: 70px; background: #eee; border-radius: 4px; overflow: hidden;">
+                        {% if p.book.image %}
+                            <img src="{{ p.book.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <div style="display: flex; align-items: center; justify-content: center; height: 100%;">📖</div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.1rem;">{{ p.book.title }}</h3>
+                        <p style="margin: 0; color: #7f8c8d; font-size: 0.85rem;">Bought for {{ p.sale_price }}€ on {{ p.sale_date|date:"d M Y" }}</p>
+                    </div>
+                </div>
+
+                <div>
+                    {% if p.book.review %}
+                        <button class="btn-see-review" onclick="toggleReview('review-{{ p.id }}', this)">
+                            <i data-lucide="eye" style="width: 18px; height: 18px;"></i>
+                            <span>See Review</span>
+                        </button>
+                    {% else %}
+                        <a href="{% url 'leave_review' p.book.id %}" class="btn-rate">
+                            <i data-lucide="star" style="width: 16px; height: 16px; margin-right: 5px;"></i>
+                            Rate Now
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if p.book.review %}
+        <div id="review-{{ p.id }}" class="review-details">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+                <div class="stars-gold">
+                    {% with rating=p.book.review.rating|floatformat:0 %}
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= p.book.review.rating %}★{% else %}☆{% endif %}
+                        {% endfor %}
+                    {% endwith %}
+                    <span style="color: #2c3e50; font-size: 0.9rem; margin-left: 5px;">({{ p.book.review.rating }}/5)</span>
+                </div>
+                <span style="font-size: 0.8rem; color: #bdc3c7;">Reviewed on {{ p.book.review.created_at|date:"d/m/Y" }}</span>
+            </div>
+
+            <p style="margin: 0; color: #555; line-height: 1.5; font-style: italic;">
+                "{{ p.book.review.comment|default:'No comment left.' }}"
+            </p>
+
+            <div style="margin-top: 0.8rem; text-align: right;">
+                <a href="{% url 'leave_review' p.book.id %}" class="btn-edit-small">
+                    <i data-lucide="pencil" style="width: 14px; height: 14px;"></i> Edit Review
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+        <div style="text-align: center; padding: 3rem; background: white; border-radius: 12px;">
+            <p style="color: #7f8c8d;">You haven't bought any books yet.</p>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+function toggleReview(id, btn) {
+    const content = document.getElementById(id);
+    const isOpening = !content.classList.contains('open');
+
+
+    content.classList.toggle('open');
+
+    const span = btn.querySelector('span');
+    const icon = btn.querySelector('i');
+
+    if (isOpening) {
+        span.textContent = 'Hide Review';
+        btn.style.background = '#ffebeb';
+    } else {
+        span.textContent = 'See Review';
+        btn.style.background = '#f8f9fa';
+    }
+}
+</script>
+
+{% endblock %}

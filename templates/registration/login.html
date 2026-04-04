@@ -102,8 +102,8 @@
 </style>
 
 <div class="auth-container">
-  <h2 class="auth-title">Bem-vindo!</h2>
-  <p class="auth-subtitle">Entra na tua conta para continuar</p>
+  <h2 class="auth-title">Welcome!</h2>
+  <p class="auth-subtitle">The best place to buy and sell second-hand books. Join our community today!</p>
 
   <form method="POST" novalidate>
     {% csrf_token %} {% for field in form %}
@@ -116,11 +116,11 @@
     </div>
     {% endfor %}
 
-    <button type="submit" class="btn-submit">Entrar</button>
+    <button type="submit" class="btn-submit">Login</button>
   </form>
 
   <div class="auth-link">
-    Não tens conta? <a href="/accounts/register/">Registar</a>
+    Don't have an account? <a href="/accounts/register/">Register</a>
   </div>
 </div>
 

@@ -5,10 +5,10 @@
 
     <div style="padding: 1rem 1.5rem; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h3 style="margin: 0;">{{ chat.book.title }}</h3>
-            <small>Conversation with
+
+            <h3>
                 {% if request.user == chat.buyer %}{{ chat.seller.username }}{% else %}{{ chat.buyer.username }}{% endif %}
-            </small>
+            </h3>
         </div>
         <a href="{% url 'inbox' %}" style="color: white; text-decoration: none; font-weight: 600;">✕ Close</a>
     </div>
