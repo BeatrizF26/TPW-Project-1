@@ -63,6 +63,14 @@
     margin-top: 0.25rem;
   }
 
+  .form-errors.global {
+    margin-bottom: 1.5rem;
+    padding: 0.85rem 1rem;
+    background: rgba(231, 76, 60, 0.08);
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    border-radius: 8px;
+  }
+
   .btn-submit {
     width: 100%;
     padding: 0.9rem;
@@ -106,7 +114,15 @@
   <p class="auth-subtitle">The best place to buy and sell second-hand books. Join our community today!</p>
 
   <form method="POST" novalidate>
-    {% csrf_token %} {% for field in form %}
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="form-errors global">
+      {% for error in form.non_field_errors %}
+      <div>{{ error }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% for field in form %}
     <div class="form-group">
       {% if field.label %}
       <label for="{{ field.id_for_label }}">{{ field.label }}</label>
