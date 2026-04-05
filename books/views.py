@@ -7,7 +7,10 @@ from django.contrib import messages
 
 @login_required
 def book_list(request):
-    books = Book.objects.filter(is_sold=False)
+    if request.user.is_seller:
+        books = Book.objects.filter(seller=request.user, is_sold=False)
+    else:
+        books = Book.objects.filter(is_sold=False)
 
     query = request.GET.get('q')
     genre = request.GET.get('genre')

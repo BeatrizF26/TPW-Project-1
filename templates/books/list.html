@@ -26,7 +26,7 @@
 </style>
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; width: 100%;">
-  <h1 style="margin: 0; line-height: 1; display: flex; align-items: center;">Books for sale</h1>
+  <h1 style="margin: 0; line-height: 1; display: flex; align-items: center;">{% if user.is_seller %}My Active Listings{% else %}Books for Sale{% endif %}</h1>
   {% if user.is_seller %}
     <a href="{% url 'create_book' %}" class="btn btn-add" style="margin: 0; display: flex; align-items: center; height: fit-content;">
       <i data-lucide="book-plus"></i>  Add Book
@@ -34,6 +34,7 @@
   {% endif %}
 </div>
 
+{% if not user.is_seller %}
 <section style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); width: 100%; box-sizing: border-box;">
   <form method="GET" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 1.5rem; align-items: end;">
 
@@ -91,6 +92,7 @@
 
   </form>
 </section>
+{% endif %}
 
 {% if books %}
 <div class="books-grid">
@@ -101,19 +103,21 @@
         <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 100%; height: 100%; object-fit: cover" />
       {% else %} 📖 {% endif %}
     </div>
-    <div class="book-content" style="text-align: center;">
-      <div class="book-title" style="margin-bottom: 1rem;">{{ book.title }}</div>
+    <div class="book-content" style="text-align: center; display: flex; flex-direction: column; gap: 0.5rem;">
+      <div class="book-title" style="font-weight: 700; color: var(--dark);">{{ book.title }}</div>
+
+      {% if user.is_seller %}
+      <div style="color: var(--primary); font-weight: 700; font-size: 1.1rem;">{{ book.price }}€</div>
+      <div style="color: #7f8c8d; font-size: 0.85rem; margin-bottom: 0.5rem;">by {{ book.author }}</div>
+        <div style="background: #e0f2f1; color: #00796b; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; font-weight: 600; margin-bottom: 0.5rem;">
+          Live on Market
+        </div>
+      {% endif %}
+
       <a href="{% url 'book_detail' book.id %}"
          class="btn btn-details-custom"
-         style="width: 100%;
-                justify-content: center;
-                display: flex;
-                align-items: center;
-                padding: 0.75rem;
-                border-radius: 8px;
-                font-weight: 700 !important;
-                text-decoration: none;">
-         See Details
+         style="width: 100%; justify-content: center; display: flex; align-items: center; padding: 0.6rem; border-radius: 8px; font-weight: 700 !important; text-decoration: none; font-size: 0.9rem;">
+          See Details
       </a>
     </div>
   </div>
@@ -122,7 +126,7 @@
 {% else %}
 <div class="empty-state">
   <div class="empty-state-icon">📚</div>
-  <p>No book available in the moment</p>
+  <p>{% if user.is_seller %} No books to sell. Add one! {% else %} No books available in the moment{% endif %}</p>
 </div>
 {% endif %}
 {% endblock %}

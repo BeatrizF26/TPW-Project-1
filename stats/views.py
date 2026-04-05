@@ -1,28 +1,30 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db.models import Sum
+from django.db.models import Avg, Sum
 from accounts.models import User
-from books.models import Book, Purchase
+from books.models import Book, Purchase, Review
+
 
 @login_required
 def seller_dashboard(request):
-    earnings_data = Purchase.objects.filter(seller=request.user).aggregate(total=Sum('sale_price'))
-    total_earned = earnings_data['total'] or 0
+    if not request.user.is_seller:
+        return redirect('book_list')
 
-    books_sold = Purchase.objects.filter(seller=request.user).count()
+    sales = Purchase.objects.filter(seller=request.user).select_related('book', 'buyer').order_by('-sale_date')
 
-    active_books = Book.objects.filter(seller=request.user, is_sold=False).count()
+    total_revenue = sales.aggregate(Sum('sale_price'))['sale_price__sum'] or 0
+    books_sold_count = sales.count()
+    active_ads_count = Book.objects.filter(seller=request.user, is_sold=False).count()
 
-    sales_history = Purchase.objects.filter(seller=request.user).order_by('-sale_date')
+    avg_rating = Review.objects.filter(book__seller=request.user).aggregate(Avg('rating'))['rating__avg'] or 0
 
-    context = {
-        'total_earned': total_earned,
-        'books_sold': books_sold,
-        'active_books': active_books,
-        'sales_history': sales_history,
-    }
-    return render(request, 'stats/seller_dashboard.html', context)
-
+    return render(request, 'stats/seller_dashboard.html', {
+        'sales': sales,
+        'total_revenue': total_revenue,
+        'books_sold_count': books_sold_count,
+        'active_ads_count': active_ads_count,
+        'avg_rating': round(avg_rating, 1)
+    })
 
 def is_admin(user):
     return user.is_authenticated and user.is_staff

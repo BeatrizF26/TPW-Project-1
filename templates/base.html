@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BookMarket - Compra e Venda de Livros</title>
+    <title>BookMarket - Buy and Sell Books</title>
     <style>
       * {
         margin: 0;
@@ -118,7 +118,7 @@
       }
 
       .nav-item:hover {
-        color: var(--primary) !important; 
+        color: var(--primary) !important;
         background-color: rgba(46, 196, 182, 0.1);
       }
 
@@ -301,10 +301,17 @@
           <span>Messages</span>
         </a>
 
-        <a href="{% url 'my_purchases' %}" class="nav-item">
-          <i data-lucide="shopping-bag" style="width: 18px; height: 18px;"></i>
-          <span>Purchases</span>
-        </a>
+        {% if user.is_seller %}
+          <a href="{% url 'seller_dashboard' %}" class="nav-item">
+            <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i>
+            <span>Dashboard</span>
+          </a>
+        {% else %}
+          <a href="{% url 'my_purchases' %}" class="nav-item">
+            <i data-lucide="shopping-bag" style="width: 18px; height: 18px;"></i>
+            <span>Purchases</span>
+          </a>
+        {% endif %}
 
         <form method="post" action="/accounts/logout/" style="display: inline">
             {% csrf_token %}

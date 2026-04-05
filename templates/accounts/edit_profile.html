@@ -1,55 +1,39 @@
 {% extends 'base.html' %} {% block content %}
 <style>
   .edit-profile-container {
-    max-width: 900px;
-    margin: 2rem auto;
+    max-width: 800px;
+    margin: 0rem auto;
     background: white;
-    border-radius: 16px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   }
 
   .edit-profile-header {
-    background: linear-gradient(135deg, var(--primary) 0%, #2ea89e 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primarydark) 100%);
     color: white;
-    padding: 2rem;
+    padding: 2rem 1rem;
+    text-align: center;
   }
 
   .edit-profile-title {
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 2.2rem;
+    font-weight: 800;
     margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
   }
 
   .edit-profile-content {
     padding: 2rem;
   }
 
-  .form-section {
-    margin-bottom: 2rem;
-  }
-
-  .form-section-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--dark);
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--primary);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .form-section-title span {
-    font-size: 1.5rem;
-  }
-
   .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
   }
 
   .form-group {
@@ -58,103 +42,101 @@
   }
 
   .form-group label {
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
+    font-weight: 700;
+    color: #4a5568;
+    margin-bottom: 0.6rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  .form-group input,
-  .form-group textarea {
-    padding: 0.75rem;
-    border: 2px solid var(--border);
-    border-radius: 8px;
+  .form-group input {
+    padding: 0.8rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
     font-size: 1rem;
-    font-family: inherit;
     transition: all 0.3s ease;
+    background: #f8fafc;
   }
 
-  .form-group input:focus,
-  .form-group textarea:focus {
+  .form-group input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.1);
-  }
-
-  .form-group textarea {
-    resize: vertical;
-    min-height: 100px;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(46, 196, 182, 0.1);
   }
 
   .form-actions {
     display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 1.5rem;
+    margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid #f1f5f9;
   }
 
-  .btn-action {
-    flex: 1;
-    padding: 1rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-
+  /* Botão Salvar (Verde com DarkPrimary no hover) */
   .btn-save {
+    flex: 2;
     background: var(--primary);
     color: white;
+    padding: 1rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
   }
 
   .btn-save:hover {
-    background: #26a89e;
+    background: var(--primarydark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3);
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.2);
   }
 
+  /* Botão Cancelar (Cinza que fica Vermelho no hover) */
   .btn-cancel {
-    background: var(--grey);
-    color: var(--text);
+    flex: 1;
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
   }
 
   .btn-cancel:hover {
-    background: #dee2e6;
+    background: var(--secondary);
+    color: white;
+    transform: translateY(-2px);
   }
 
   .form-errors {
     color: var(--secondary);
-    font-size: 0.85rem;
-    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
   }
 
-  @media (max-width: 768px) {
-    .edit-profile-container {
-      margin: 1rem;
-    }
-
-    .form-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .form-actions {
-      flex-direction: column;
-    }
+  @media (max-width: 600px) {
+    .form-actions { flex-direction: column; }
+    .edit-profile-content { padding: 1.5rem; }
   }
 </style>
 
 <div class="edit-profile-container">
   <div class="edit-profile-header">
-    <h1 class="edit-profile-title">✏️ Editar Perfil</h1>
+    <h1 class="edit-profile-title">Edit Profile</h1>
   </div>
 
   <div class="edit-profile-content">
@@ -163,10 +145,22 @@
 
       <!-- Informações do Utilizador -->
       <div class="form-section">
-        <div class="form-section-title">
-          <span>👤</span> Informações Pessoais
-        </div>
         <div class="form-grid">
+
+          <div class="form-group">
+            <label for="{{ user_form.first_name.id_for_label }}">Name</label>
+            {{ user_form.first_name }} {% if user_form.first_name.errors %}
+            <div class="form-errors">{{ user_form.first_name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ user_form.last_name.id_for_label }}">Last Name</label>
+            {{ user_form.last_name }} {% if user_form.last_name.errors %}
+            <div class="form-errors">{{ user_form.last_name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
           <div class="form-group">
             <label for="{{ user_form.email.id_for_label }}">Email</label>
             {{ user_form.email }} {% if user_form.email.errors %}
@@ -175,22 +169,8 @@
           </div>
 
           <div class="form-group">
-            <label for="{{ user_form.first_name.id_for_label }}">Nome</label>
-            {{ user_form.first_name }} {% if user_form.first_name.errors %}
-            <div class="form-errors">{{ user_form.first_name.errors.0 }}</div>
-            {% endif %}
-          </div>
-
-          <div class="form-group">
-            <label for="{{ user_form.last_name.id_for_label }}">Apelido</label>
-            {{ user_form.last_name }} {% if user_form.last_name.errors %}
-            <div class="form-errors">{{ user_form.last_name.errors.0 }}</div>
-            {% endif %}
-          </div>
-
-          <div class="form-group">
             <label for="{{ user_form.phone_number.id_for_label }}"
-              >Telefone</label
+              >Phone</label
             >
             {{ user_form.phone_number }} {% if user_form.phone_number.errors %}
             <div class="form-errors">{{ user_form.phone_number.errors.0 }}</div>
@@ -199,53 +179,52 @@
         </div>
       </div>
 
-      <!-- Perfil de Comprador -->
-      <div class="form-section">
-        <div class="form-section-title">
-          <span>🛍️</span> Perfil de Comprador
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="{{ buyer_form.address.id_for_label }}">Morada</label>
-            {{ buyer_form.address }} {% if buyer_form.address.errors %}
-            <div class="form-errors">{{ buyer_form.address.errors.0 }}</div>
-            {% endif %}
-          </div>
+<!--      &lt;!&ndash; Perfil de Comprador &ndash;&gt;-->
+<!--      <div class="form-section">-->
+<!--        <div class="form-section-title">-->
+<!--          <span>🛍️</span> Perfil de Comprador-->
+<!--        </div>-->
+<!--        <div class="form-grid">-->
+<!--          <div class="form-group">-->
+<!--            <label for="{{ buyer_form.address.id_for_label }}">Morada</label>-->
+<!--            {{ buyer_form.address }} {% if buyer_form.address.errors %}-->
+<!--            <div class="form-errors">{{ buyer_form.address.errors.0 }}</div>-->
+<!--            {% endif %}-->
+<!--          </div>-->
 
-          <div class="form-group">
-            <label for="{{ buyer_form.favorite_genres.id_for_label }}"
-              >Géneros Favoritos</label
-            >
-            {{ buyer_form.favorite_genres }} {% if
-            buyer_form.favorite_genres.errors %}
-            <div class="form-errors">
-              {{ buyer_form.favorite_genres.errors.0 }}
-            </div>
-            {% endif %}
-          </div>
-        </div>
-      </div>
+<!--          <div class="form-group">-->
+<!--            <label for="{{ buyer_form.favorite_genres.id_for_label }}"-->
+<!--              >Géneros Favoritos</label-->
+<!--            >-->
+<!--            {{ buyer_form.favorite_genres }} {% if buyer_form.favorite_genres.errors %}-->
+<!--            <div class="form-errors">-->
+<!--              {{ buyer_form.favorite_genres.errors.0 }}-->
+<!--            </div>-->
+<!--            {% endif %}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
-      <!-- Perfil de Vendedor -->
-      <div class="form-section">
-        <div class="form-section-title"><span>🏪</span> Perfil de Vendedor</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="{{ seller_form.iban.id_for_label }}">IBAN</label>
-            {{ seller_form.iban }} {% if seller_form.iban.errors %}
-            <div class="form-errors">{{ seller_form.iban.errors.0 }}</div>
-            {% endif %}
-          </div>
-        </div>
-      </div>
+<!--      &lt;!&ndash; Perfil de Vendedor &ndash;&gt;-->
+<!--      <div class="form-section">-->
+<!--        <div class="form-section-title"><span>🏪</span> Perfil de Vendedor</div>-->
+<!--        <div class="form-grid">-->
+<!--          <div class="form-group">-->
+<!--            <label for="{{ seller_form.iban.id_for_label }}">IBAN</label>-->
+<!--            {{ seller_form.iban }} {% if seller_form.iban.errors %}-->
+<!--            <div class="form-errors">{{ seller_form.iban.errors.0 }}</div>-->
+<!--            {% endif %}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
       <!-- Ações -->
       <div class="form-actions">
         <button type="submit" class="btn-action btn-save">
-          ✓ Guardar Alterações
+          Save Changes
         </button>
         <a href="{% url 'profile' %}" class="btn-action btn-cancel"
-          >← Cancelar</a
+          >Cancel</a
         >
       </div>
     </form>
