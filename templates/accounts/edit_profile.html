@@ -1,233 +1,345 @@
 {% extends 'base.html' %} {% block content %}
 <style>
-  .edit-profile-container {
-    max-width: 800px;
-    margin: 0rem auto;
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  .edit-page {
+    --paper: #fcfefd;
+    --ink: var(--text, #2c3e50);
+    --muted: #6f8291;
+    --line: #d9e4e6;
+    --accent: var(--primary, #2ec4b6);
+    --accent-strong: var(--primarydark, #29b0a3);
+    --mint-soft: rgba(46, 196, 182, 0.12);
+    max-width: 1180px;
+    margin: 1.5rem auto 3rem;
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--ink);
   }
 
-  .edit-profile-header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primarydark) 100%);
-    color: white;
-    padding: 2rem 1rem;
-    text-align: center;
-  }
-
-  .edit-profile-title {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin: 0;
+  .edit-hero {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    padding: 2.8rem 3rem;
+    border-radius: 30px;
+    background:
+      radial-gradient(circle at top left, rgba(46, 196, 182, 0.22), transparent 28%),
+      linear-gradient(160deg, #eefaf8 0%, #f8fbfc 100%);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 24px 60px rgba(36, 50, 63, 0.12);
   }
 
-  .edit-profile-content {
-    padding: 2rem;
+  .edit-kicker {
+    display: inline-block;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--accent-strong);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .edit-title {
+    margin: 0;
+    font-size: 3rem;
+    line-height: 0.98;
+  }
+
+  .edit-subtitle {
+    margin: 1rem 0 0;
+    max-width: 54ch;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .edit-mode {
+    display: inline-flex;
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--ink);
+    font-size: 0.92rem;
+    font-weight: 700;
+  }
+
+  .edit-form-wrap {
+    margin-top: 1.4rem;
+  }
+
+  .form-stack {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .form-section {
+    padding: 1.4rem 1.5rem 1.5rem;
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 252, 0.96));
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 10px 26px rgba(36, 50, 63, 0.06);
+  }
+
+  .form-section-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .form-section-title {
+    margin: 0;
+    font-size: 1.45rem;
+  }
+
+  .form-section-subtitle {
+    margin: 0.35rem 0 0;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 52ch;
   }
 
   .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem 1.15rem;
   }
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
+  .field-wide {
+    grid-column: span 2;
   }
 
   .form-group label {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: var(--ink);
+    font-size: 0.94rem;
     font-weight: 700;
-    color: #4a5568;
-    margin-bottom: 0.6rem;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 
-  .form-group input {
-    padding: 0.8rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.88rem 0.95rem;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #fff;
+    color: var(--ink);
     font-size: 1rem;
-    transition: all 0.3s ease;
-    background: #f8fafc;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    box-sizing: border-box;
+    resize: vertical;
   }
 
-  .form-group input:focus {
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: #9aa6af;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
     outline: none;
-    border-color: var(--primary);
-    background: white;
-    box-shadow: 0 0 0 4px rgba(46, 196, 182, 0.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(46, 196, 182, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .form-errors {
+    color: #d94c4c;
+    font-size: 0.86rem;
+    margin-top: 0.4rem;
   }
 
   .form-actions {
     display: flex;
-    gap: 1.5rem;
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid #f1f5f9;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
   }
 
-  /* Botão Salvar (Verde com DarkPrimary no hover) */
-  .btn-save {
-    flex: 2;
-    background: var(--primary);
-    color: white;
-    padding: 1rem;
-    border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex;
+  .btn-save,
+  .btn-cancel {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    transition: all 0.3s ease;
+    padding: 1rem 1.2rem;
+    border-radius: 18px;
+    font-weight: 700;
+    font-family: inherit;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+
+  .btn-save {
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--primary, #2ec4b6) 0%, var(--primarydark, #29b0a3) 100%);
+    color: white;
+    box-shadow: 0 16px 30px rgba(46, 196, 182, 0.24);
+    flex: 1.2;
   }
 
   .btn-save:hover {
-    background: var(--primarydark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.2);
+    box-shadow: 0 20px 36px rgba(46, 196, 182, 0.3);
   }
 
-  /* Botão Cancelar (Cinza que fica Vermelho no hover) */
   .btn-cancel {
+    background: var(--mint-soft);
+    color: var(--ink);
     flex: 1;
-    background: #f1f5f9;
-    color: #64748b;
-    padding: 1rem;
-    border-radius: 12px;
-    font-weight: 700;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.3s ease;
   }
 
   .btn-cancel:hover {
-    background: var(--secondary);
-    color: white;
-    transform: translateY(-2px);
+    background: rgba(46, 196, 182, 0.18);
   }
 
-  .form-errors {
-    color: var(--secondary);
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
+  @media (max-width: 960px) {
+    .edit-hero {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem;
+    }
+
+    .edit-title {
+      font-size: 2.35rem;
+    }
+
+    .form-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
-  @media (max-width: 600px) {
-    .form-actions { flex-direction: column; }
-    .edit-profile-content { padding: 1.5rem; }
+  @media (max-width: 640px) {
+    .edit-page {
+      margin: 1rem auto 2rem;
+    }
+
+    .edit-hero {
+      padding: 1.4rem;
+      border-radius: 24px;
+    }
+
+    .edit-form-wrap {
+      padding: 0;
+    }
+
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .field-wide {
+      grid-column: span 1;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
   }
 </style>
 
-<div class="edit-profile-container">
-  <div class="edit-profile-header">
-    <h1 class="edit-profile-title">Edit Profile</h1>
+<section class="edit-page">
+  <div class="edit-hero">
+    <div>
+      <span class="edit-kicker">BookMarket</span>
+      <h1 class="edit-title">Edit your profile</h1>
+      <p class="edit-subtitle">
+        {% if user.is_seller %}
+          Update the identity and payment details behind your storefront with a layout that gives the fields room to breathe.
+        {% else %}
+          Update the contact and buyer details tied to your account without forcing everything into unnecessary boxes.
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="edit-mode">{% if user.is_seller %}Seller mode{% else %}Buyer mode{% endif %}</div>
   </div>
 
-  <div class="edit-profile-content">
+  <div class="edit-form-wrap">
     <form method="POST" novalidate>
       {% csrf_token %}
 
-      <!-- Informações do Utilizador -->
-      <div class="form-section">
-        <div class="form-grid">
-
-          <div class="form-group">
-            <label for="{{ user_form.first_name.id_for_label }}">Name</label>
-            {{ user_form.first_name }} {% if user_form.first_name.errors %}
-            <div class="form-errors">{{ user_form.first_name.errors.0 }}</div>
-            {% endif %}
+      <div class="form-stack">
+        <section class="form-section">
+          <div class="form-section-header">
+            <h2 class="form-section-title">Account details</h2>
+            <p class="form-section-subtitle">Basic information tied to your profile and account access.</p>
           </div>
 
-          <div class="form-group">
-            <label for="{{ user_form.last_name.id_for_label }}">Last Name</label>
-            {{ user_form.last_name }} {% if user_form.last_name.errors %}
-            <div class="form-errors">{{ user_form.last_name.errors.0 }}</div>
-            {% endif %}
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="{{ user_form.first_name.id_for_label }}">First name</label>
+              {{ user_form.first_name }}
+              {% if user_form.first_name.errors %}<div class="form-errors">{{ user_form.first_name.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ user_form.last_name.id_for_label }}">Last name</label>
+              {{ user_form.last_name }}
+              {% if user_form.last_name.errors %}<div class="form-errors">{{ user_form.last_name.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group field-wide">
+              <label for="{{ user_form.email.id_for_label }}">Email</label>
+              {{ user_form.email }}
+              {% if user_form.email.errors %}<div class="form-errors">{{ user_form.email.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group field-wide">
+              <label for="{{ user_form.phone_number.id_for_label }}">Phone number</label>
+              {{ user_form.phone_number }}
+              {% if user_form.phone_number.errors %}<div class="form-errors">{{ user_form.phone_number.errors.0 }}</div>{% endif %}
+            </div>
+          </div>
+        </section>
+
+        {% if user.is_buyer %}
+        <section class="form-section">
+          <div class="form-section-header">
+            <h2 class="form-section-title">Buyer profile</h2>
+            <p class="form-section-subtitle">Details that help with checkout and reflect what you like to read.</p>
           </div>
 
-          <div class="form-group">
-            <label for="{{ user_form.email.id_for_label }}">Email</label>
-            {{ user_form.email }} {% if user_form.email.errors %}
-            <div class="form-errors">{{ user_form.email.errors.0 }}</div>
-            {% endif %}
+          <div class="form-grid">
+            <div class="form-group field-wide">
+              <label for="{{ buyer_form.address.id_for_label }}">Shipping address</label>
+              {{ buyer_form.address }}
+              {% if buyer_form.address.errors %}<div class="form-errors">{{ buyer_form.address.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group field-wide">
+              <label for="{{ buyer_form.favorite_genres.id_for_label }}">Favorite genres</label>
+              {{ buyer_form.favorite_genres }}
+              {% if buyer_form.favorite_genres.errors %}<div class="form-errors">{{ buyer_form.favorite_genres.errors.0 }}</div>{% endif %}
+            </div>
+          </div>
+        </section>
+        {% endif %}
+
+        {% if user.is_seller %}
+        <section class="form-section">
+          <div class="form-section-header">
+            <h2 class="form-section-title">Seller profile</h2>
+            <p class="form-section-subtitle">Information needed for receiving payments from sold books.</p>
           </div>
 
-          <div class="form-group">
-            <label for="{{ user_form.phone_number.id_for_label }}"
-              >Phone</label
-            >
-            {{ user_form.phone_number }} {% if user_form.phone_number.errors %}
-            <div class="form-errors">{{ user_form.phone_number.errors.0 }}</div>
-            {% endif %}
+          <div class="form-grid">
+            <div class="form-group field-wide">
+              <label for="{{ seller_form.iban.id_for_label }}">IBAN</label>
+              {{ seller_form.iban }}
+              {% if seller_form.iban.errors %}<div class="form-errors">{{ seller_form.iban.errors.0 }}</div>{% endif %}
+            </div>
           </div>
-        </div>
+        </section>
+        {% endif %}
       </div>
 
-<!--      &lt;!&ndash; Perfil de Comprador &ndash;&gt;-->
-<!--      <div class="form-section">-->
-<!--        <div class="form-section-title">-->
-<!--          <span>🛍️</span> Perfil de Comprador-->
-<!--        </div>-->
-<!--        <div class="form-grid">-->
-<!--          <div class="form-group">-->
-<!--            <label for="{{ buyer_form.address.id_for_label }}">Morada</label>-->
-<!--            {{ buyer_form.address }} {% if buyer_form.address.errors %}-->
-<!--            <div class="form-errors">{{ buyer_form.address.errors.0 }}</div>-->
-<!--            {% endif %}-->
-<!--          </div>-->
-
-<!--          <div class="form-group">-->
-<!--            <label for="{{ buyer_form.favorite_genres.id_for_label }}"-->
-<!--              >Géneros Favoritos</label-->
-<!--            >-->
-<!--            {{ buyer_form.favorite_genres }} {% if buyer_form.favorite_genres.errors %}-->
-<!--            <div class="form-errors">-->
-<!--              {{ buyer_form.favorite_genres.errors.0 }}-->
-<!--            </div>-->
-<!--            {% endif %}-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; Perfil de Vendedor &ndash;&gt;-->
-<!--      <div class="form-section">-->
-<!--        <div class="form-section-title"><span>🏪</span> Perfil de Vendedor</div>-->
-<!--        <div class="form-grid">-->
-<!--          <div class="form-group">-->
-<!--            <label for="{{ seller_form.iban.id_for_label }}">IBAN</label>-->
-<!--            {{ seller_form.iban }} {% if seller_form.iban.errors %}-->
-<!--            <div class="form-errors">{{ seller_form.iban.errors.0 }}</div>-->
-<!--            {% endif %}-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-
-      <!-- Ações -->
       <div class="form-actions">
-        <button type="submit" class="btn-action btn-save">
-          Save Changes
-        </button>
-        <a href="{% url 'profile' %}" class="btn-action btn-cancel"
-          >Cancel</a
-        >
+        <button type="submit" class="btn-save">Save changes</button>
+        <a href="{% url 'profile' %}" class="btn-cancel">Cancel</a>
       </div>
     </form>
   </div>
-</div>
+</section>
 {% endblock %}

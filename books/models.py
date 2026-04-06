@@ -20,6 +20,7 @@ class Book(models.Model):
     condition = models.CharField(choices=CONDITIONS, default='ACCEPTABLE')
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     is_sold = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
 

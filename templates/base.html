@@ -117,6 +117,21 @@
         cursor: pointer;
       }
 
+      .nav-item.with-indicator {
+        position: relative;
+      }
+
+      .nav-indicator {
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--secondary);
+        border: 2px solid white;
+      }
+
       .nav-item:hover {
         color: var(--primary) !important;
         background-color: rgba(46, 196, 182, 0.1);
@@ -296,20 +311,32 @@
           <span>Hi, <strong>{{ user.username }}</strong></span>
         </a>
 
-        <a href="{% url 'inbox' %}" class="nav-item">
+        <a href="{% url 'inbox' %}" class="nav-item {% if has_unread_messages %}with-indicator{% endif %}">
           <i data-lucide="message-square" style="width: 18px; height: 18px;"></i>
           <span>Messages</span>
+          {% if has_unread_messages %}
+            <span class="nav-indicator"></span>
+          {% endif %}
         </a>
 
-        {% if user.is_seller %}
+        {% if user.is_buyer and active_mode == buyer_mode %}
+        <a href="{% url 'my_purchases' %}" class="nav-item">
+          <i data-lucide="shopping-bag" style="width: 18px; height: 18px;"></i>
+          <span>Purchases</span>
+        </a>
+        {% endif %}
+
+        {% if user.is_seller and active_mode == seller_mode %}
           <a href="{% url 'seller_dashboard' %}" class="nav-item">
             <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i>
             <span>Dashboard</span>
           </a>
-        {% else %}
-          <a href="{% url 'my_purchases' %}" class="nav-item">
-            <i data-lucide="shopping-bag" style="width: 18px; height: 18px;"></i>
-            <span>Purchases</span>
+        {% endif %}
+
+        {% if user.is_buyer and user.is_seller %}
+          <a href="{% url 'toggle_account_mode' %}" class="nav-item">
+            <i data-lucide="repeat" style="width: 18px; height: 18px;"></i>
+            <span>{% if active_mode == seller_mode %}Go to Buyer View{% else %}Go to Seller View{% endif %}</span>
           </a>
         {% endif %}
 

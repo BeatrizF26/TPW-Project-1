@@ -1,0 +1,105 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+  .upgrade-buyer-shell {
+    max-width: 760px;
+    margin: 2rem auto 3rem;
+    padding: 2.4rem;
+    border-radius: 28px;
+    background:
+      radial-gradient(circle at top left, rgba(46, 196, 182, 0.18), transparent 24%),
+      linear-gradient(160deg, #eefaf8 0%, #fcfefd 100%);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 24px 60px rgba(36, 50, 63, 0.12);
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--text);
+  }
+
+  .upgrade-buyer-kicker {
+    display: inline-block;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--primarydark);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .upgrade-buyer-title {
+    margin: 0;
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+
+  .upgrade-buyer-copy {
+    margin: 1rem 0 0;
+    color: #6f8291;
+    line-height: 1.7;
+    max-width: 46ch;
+  }
+
+  .upgrade-buyer-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .btn-enable,
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 1.2rem;
+    border-radius: 18px;
+    font-weight: 700;
+    font-family: inherit;
+    text-decoration: none;
+  }
+
+  .btn-enable {
+    border: none;
+    cursor: pointer;
+    color: white;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primarydark) 100%);
+    flex: 1.1;
+  }
+
+  .btn-back {
+    background: rgba(46, 196, 182, 0.12);
+    color: var(--text);
+    flex: 1;
+  }
+
+  @media (max-width: 640px) {
+    .upgrade-buyer-shell {
+      margin: 1rem auto 2rem;
+      padding: 1.4rem;
+      border-radius: 24px;
+    }
+
+    .upgrade-buyer-title {
+      font-size: 2rem;
+    }
+
+    .upgrade-buyer-actions {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<section class="upgrade-buyer-shell">
+  <span class="upgrade-buyer-kicker">Buyer Upgrade</span>
+  <h1 class="upgrade-buyer-title">Add buyer mode to this account.</h1>
+  <p class="upgrade-buyer-copy">You will keep your seller access exactly as it is. This only enables buyer features too, like purchases and checkout-related profile details.</p>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="upgrade-buyer-actions">
+      <button type="submit" class="btn-enable">Enable Buyer Mode</button>
+      <a href="{% url 'profile' %}" class="btn-back">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

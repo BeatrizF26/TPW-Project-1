@@ -1,15 +1,13 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Avg, Sum
 from accounts.models import User
+from accounts.decorators import seller_required
 from books.models import Book, Purchase, Review
 
 
-@login_required
+@seller_required
 def seller_dashboard(request):
-    if not request.user.is_seller:
-        return redirect('book_list')
-
     sales = Purchase.objects.filter(seller=request.user).select_related('book', 'buyer').order_by('-sale_date')
 
     total_revenue = sales.aggregate(Sum('sale_price'))['sale_price__sum'] or 0

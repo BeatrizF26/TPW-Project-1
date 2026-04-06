@@ -56,7 +56,32 @@
 
             <div>
                 <div style="display: flex; gap: 1rem;">
-                    {% if user.is_authenticated and not book.is_sold and book.seller != user %}
+                    {% if user.is_authenticated and book.seller == user %}
+                        {% if book.is_sold %}
+                            <div class="btn" style="flex: 1; justify-content: center; font-weight: 700; background: #fef0f0; color: #c0392b; cursor: default;">
+                                <i data-lucide="badge-check" style="width: 18px; height: 18px;"></i> Sold
+                            </div>
+                        {% else %}
+                            <form method="post" action="{% url 'toggle_book_status' book.id %}" style="flex: 1;">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="btn btn-buttons-custom"
+                                        style="width: 100%; color: #7f8c8d; justify-content: center; font-weight: 700; border: none; cursor: pointer; font-family: inherit;">
+                                    <i data-lucide="{% if book.is_active %}pause-circle{% else %}play-circle{% endif %}" style="width: 18px; height: 18px;"></i>
+                                    {% if book.is_active %}Disable Listing{% else %}Enable Listing{% endif %}
+                                </button>
+                            </form>
+
+                            <form method="post" action="{% url 'delete_book' book.id %}" style="flex: 1;" onsubmit="return confirm('Delete this listing?')">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="btn"
+                                        style="width: 100%; justify-content: center; font-weight: 700; background: rgba(255, 107, 107, 0.12); color: var(--secondary); border: none; cursor: pointer; font-family: inherit;">
+                                    <i data-lucide="trash-2" style="width: 18px; height: 18px;"></i> Delete Listing
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% elif user.is_authenticated and not book.is_sold and book.is_active and book.seller != user %}
                         <a href="{% url 'confirm_purchase' book.id %}"
                            class="btn btn-buttons-custom"
                            style="flex: 1; color: #7f8c8d; justify-content: center; font-weight: 700;">
@@ -66,6 +91,10 @@
                         <a href="{% url 'start_conversation' book.id %}" class="btn btn-buttons-custom" style="flex: 1; color: #7f8c8d; justify-content: center; font-weight: 700;">
                             <i data-lucide="message-square" style="width: 18px; height: 18px;"></i> Contact Seller
                         </a>
+                    {% elif user.is_authenticated and not book.is_active %}
+                        <div class="btn" style="width: 100%; background: #f1f3f5; color: #636e72; justify-content: center; cursor: default;">
+                            Listing currently disabled
+                        </div>
                     {% elif not user.is_authenticated %}
                         <a href="{% url 'login' %}" class="btn" style="width: 100%; background: var(--grey); color: var(--text); justify-content: center; text-decoration: none;">
                             Login to Purchase
