@@ -2,26 +2,207 @@
 {% block content %}
 
 <style>
+  .market-shell {
+    display: grid;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .market-hero {
+    display: grid;
+    grid-template-columns: 1.2fr auto;
+    gap: 1.5rem;
+    align-items: end;
+    padding: 2rem;
+    border-radius: 28px;
+    background:
+      radial-gradient(circle at top left, rgba(46, 196, 182, 0.22), transparent 32%),
+      linear-gradient(140deg, #ffffff 0%, #f4fbfa 100%);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 18px 42px rgba(36, 50, 63, 0.08);
+  }
+
+  .market-kicker {
+    display: inline-block;
+    margin-bottom: 0.9rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.78);
+    color: var(--primarydark);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .market-title {
+    margin: 0;
+    font-size: 2.4rem;
+    line-height: 1.05;
+  }
+
+  .market-subtitle {
+    margin: 0.9rem 0 0;
+    color: #6f8291;
+    max-width: 58ch;
+    line-height: 1.7;
+  }
+
+  .market-hero-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .market-add-btn {
+    margin: 0;
+    border-radius: 18px;
+    padding: 0.95rem 1.25rem;
+    box-shadow: 0 14px 30px rgba(46, 196, 182, 0.24);
+  }
+
+  .market-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .market-stat {
+    padding: 1.25rem 1.35rem;
+    border-radius: 22px;
+    background: white;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 12px 28px rgba(36, 50, 63, 0.06);
+  }
+
+  .market-stat-label {
+    display: block;
+    color: #7d8e9a;
+    font-size: 0.84rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.45rem;
+  }
+
+  .market-stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1;
+  }
+
+  .market-stat-note {
+    display: block;
+    margin-top: 0.45rem;
+    color: #6f8291;
+    font-size: 0.9rem;
+  }
+
+  .market-filter {
+    padding: 1.5rem;
+    border-radius: 22px;
+    background: white;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 12px 28px rgba(36, 50, 63, 0.06);
+  }
+
+  .seller-filter {
+    padding: 1.5rem;
+    border-radius: 22px;
+    background: white;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 12px 28px rgba(36, 50, 63, 0.06);
+  }
+
+  .seller-filter-form {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+  }
+
+  .market-filter-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+  }
+
+  .market-field {
+    margin: 0;
+  }
+
+  .market-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .market-field input,
+  .market-field select {
+    width: 100%;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .market-field input:focus,
+  .market-field select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(46, 196, 182, 0.12);
+  }
+
+  .market-filter-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .btn-search-custom,
+  .btn-clean-custom {
+    justify-content: center;
+    min-width: 120px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-family: inherit;
+  }
+
+  .btn-search-custom {
+    background: var(--primary);
+    color: white;
+  }
+
   .btn-search-custom:hover {
-    background-color: #3CB371 !important;
+    background-color: var(--primarydark) !important;
     color: white !important;
+  }
+
+  .btn-clean-custom {
+    background: #eef2f3;
+    color: var(--text);
   }
 
   .btn-clean-custom:hover {
-    background-color: var(--secondary) !important;
-    color: white !important;
+    background-color: #dfe8ea !important;
+    color: var(--text) !important;
   }
 
-  .btn-details-custom {
-    background-color: var(--primary);
-    color: white;
-    transition: background-color 0.3s ease;
-    border: none !important;
+  .books-grid {
+    gap: 1.4rem;
   }
 
-  .btn-details-custom:hover {
-    background-color: var(--primarydark);
-    text-decoration: none !important;
+  .seller-books-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.4rem;
+    align-items: start;
   }
 
   .book-card-link {
@@ -33,127 +214,466 @@
   .book-card-link:hover {
     text-decoration: none;
   }
+
+  .book {
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 12px 26px rgba(36, 50, 63, 0.07);
+  }
+
+  .book-image {
+    height: 230px;
+    position: relative;
+  }
+
+  .seller-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    backdrop-filter: blur(6px);
+  }
+
+  .seller-badge.live {
+    background: rgba(224, 242, 241, 0.92);
+    color: #00796b;
+  }
+
+  .seller-badge.sold {
+    background: rgba(254, 240, 240, 0.94);
+    color: #c0392b;
+  }
+
+  .seller-badge.inactive {
+    background: rgba(241, 243, 245, 0.94);
+    color: #636e72;
+  }
+
+  .book-content.market-card-content {
+    text-align: left;
+    gap: 0.85rem;
+  }
+
+  .seller-card-body {
+    display: grid;
+    gap: 0.95rem;
+  }
+
+  .seller-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0.85rem;
+    border-radius: 16px;
+    background: #f7fbfc;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+  }
+
+  .seller-status-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .seller-status-main i {
+    width: 15px;
+    height: 15px;
+    color: var(--primarydark);
+  }
+
+  .seller-status-note {
+    color: #7f8c8d;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .seller-insights {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+
+  .seller-insight {
+    padding: 0.8rem 0.85rem;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(245, 250, 251, 0.98), rgba(255, 255, 255, 0.98));
+    border: 1px solid rgba(36, 50, 63, 0.08);
+  }
+
+  .seller-insight-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .seller-insight-label {
+    color: #7d8e9a;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
+
+  .seller-insight-top i {
+    width: 15px;
+    height: 15px;
+    color: var(--primarydark);
+  }
+
+  .seller-insight-value {
+    display: block;
+    color: var(--dark);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .seller-insight-note {
+    display: block;
+    margin-top: 0.25rem;
+    color: #7f8c8d;
+    font-size: 0.8rem;
+  }
+
+  .seller-performance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.2rem;
+    border-top: 1px solid rgba(36, 50, 63, 0.08);
+  }
+
+  .seller-performance-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--dark);
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .seller-performance-label i {
+    width: 16px;
+    height: 16px;
+    color: var(--primarydark);
+  }
+
+  .seller-performance-note {
+    color: #6f8291;
+    font-size: 0.82rem;
+    text-align: right;
+  }
+
+  .seller-card-link .book {
+    height: 100%;
+  }
+
+  .book-meta {
+    color: #7f8c8d;
+    font-size: 0.88rem;
+  }
+
+  .book-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: auto;
+  }
+
+  .book-price-chip {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .btn-details-custom {
+    background-color: var(--primary);
+    color: white;
+    transition: background-color 0.3s ease;
+    border: none !important;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: inherit;
+  }
+
+  .btn-details-custom:hover {
+    background-color: var(--primarydark);
+  }
+
+  .empty-state {
+    padding: 3rem 2rem;
+    border-radius: 28px;
+    background: white;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 12px 28px rgba(36, 50, 63, 0.06);
+    text-align: center;
+  }
+
+  .empty-state-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 0.75rem;
+    object-fit: contain;
+  }
+
+  .empty-state p {
+    color: #6f8291;
+    font-size: 1rem;
+  }
+
+  @media (max-width: 920px) {
+    .market-hero,
+    .market-filter-form,
+    .seller-filter-form {
+      grid-template-columns: 1fr;
+    }
+
+    .market-hero-actions {
+      justify-content: flex-start;
+    }
+
+    .market-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .seller-books-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .market-filter-actions {
+      flex-wrap: wrap;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .market-title {
+      font-size: 1.95rem;
+    }
+
+    .market-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .seller-insights {
+      grid-template-columns: 1fr;
+    }
+
+    .book-footer {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .btn-details-custom {
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+    }
+  }
 </style>
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; width: 100%;">
-  <h1 style="margin: 0; line-height: 1; display: flex; align-items: center;">{% if active_mode == seller_mode %}My Active Listings{% else %}Books for Sale{% endif %}</h1>
+<section class="market-shell">
   {% if active_mode == seller_mode %}
-    <a href="{% url 'create_book' %}" class="btn btn-add" style="margin: 0; display: flex; align-items: center; height: fit-content;">
-      <i data-lucide="book-plus"></i>  Add Book
-    </a>
-  {% endif %}
-</div>
-
-{% if active_mode != seller_mode %}
-<section style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); width: 100%; box-sizing: border-box;">
-  <form method="GET" id="book-search-form" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 1.5rem; align-items: end;">
-
-    <div class="form-group" style="margin-bottom: 0;">
-      <label style="display: block; font-weight: 600; font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.5rem;">Title</label>
-      <input type="text" id="book-search-title" name="q" value="{{ query_params.q|default:'' }}" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px;">
+  <section class="market-hero">
+    <div>
+      <span class="market-kicker">Seller View</span>
+      <h1 class="market-title">Your shelf, curated for buyers.</h1>
+      <p class="market-subtitle">Track which listings are live, which books have already sold, and keep your storefront fresh with new titles that deserve attention.</p>
     </div>
-
-    <div class="form-group" style="margin-bottom: 0;">
-      <label style="display: block; font-weight: 600; font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.5rem;">Gender</label>
-      <input type="text" name="genre" value="{{ query_params.genre|default:'' }}" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px;">
-    </div>
-
-    <div class="form-group" style="margin-bottom: 0;">
-      <label style="display: block; font-weight: 600; font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.5rem;">Max Price (€)</label>
-      <input type="number" name="max_price" value="{{ query_params.max_price|default:'' }}" step="0.01" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px;">
-    </div>
-
-    <div style="display: flex; gap: 0.5rem;">
-      <button type="submit"
-              class="btn btn-primary btn-search-custom"
-              style="background: #DCDCDC;
-                     color: #2c3e50;
-                     padding: 0.75rem 1.5rem;
-                     justify-content: center;
-                     font-weight: 700 !important;
-                     border: none;
-                     cursor: pointer;
-                     font-family: inherit;
-                     font-size: 0.95rem;
-                     line-height: 1.2;
-                     display: flex;
-                     align-items: center;">
-        Search
-      </button>
-
-      <a href="{% url 'book_list' %}"
-         class="btn btn-clean-custom"
-         style="background: #DCDCDC;
-                color: #2c3e50;
-                padding: 0.75rem 1.5rem;
-                text-decoration: none;
-                border-radius: 8px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: 700 !important;
-                font-family: inherit;
-                font-size: 0.95rem;
-                line-height: 1.2;
-                border: none;">
-        Clean
+    <div class="market-hero-actions">
+      <a href="{% url 'create_book' %}" class="btn btn-add market-add-btn">
+        <i data-lucide="book-plus"></i>
+        <span>Add Book</span>
       </a>
     </div>
+  </section>
 
-  </form>
-</section>
-{% endif %}
+  <section class="market-stats">
+    <article class="market-stat">
+      <span class="market-stat-label">Total Listings</span>
+      <span class="market-stat-value">{{ seller_stats.total }}</span>
+      <span class="market-stat-note">Books created under your seller account.</span>
+    </article>
+    <article class="market-stat">
+      <span class="market-stat-label">Live on Market</span>
+      <span class="market-stat-value">{{ seller_stats.live }}</span>
+      <span class="market-stat-note">Visible to buyers right now.</span>
+    </article>
+    <article class="market-stat">
+      <span class="market-stat-label">Sold</span>
+      <span class="market-stat-value">{{ seller_stats.sold }}</span>
+      <span class="market-stat-note">Completed listings already purchased.</span>
+    </article>
+    <article class="market-stat">
+      <span class="market-stat-label">Inactive</span>
+      <span class="market-stat-value">{{ seller_stats.inactive }}</span>
+      <span class="market-stat-note">Hidden listings you can reactivate later.</span>
+    </article>
+  </section>
 
-{% if books %}
-<div class="books-grid">
-  {% for book in books %}
-  <a href="{% url 'book_detail' book.id %}" class="book-card-link">
-    <div class="book">
-      <div class="book-image">
-        {% if book.image %}
-          <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 100%; height: 100%; object-fit: cover" />
-        {% else %} 📖 {% endif %}
+  <section class="seller-filter">
+    <form method="GET" class="seller-filter-form">
+      <div class="market-field">
+        <label for="seller-search-title">Search your listings</label>
+        <input type="text" id="seller-search-title" name="q" value="{{ query_params.q|default:'' }}" placeholder="Search by title" />
       </div>
-      <div class="book-content" style="text-align: center; display: flex; flex-direction: column; gap: 0.5rem;">
-        <div class="book-title" style="font-weight: 700; color: var(--dark);">{{ book.title }}</div>
 
-        <div style="color: #7f8c8d; font-size: 0.85rem; margin-bottom: 0.5rem;">by {{ book.author }}</div>
-        <div style="color: var(--primary); font-weight: 700; font-size: 1.1rem;">{{ book.price }}€</div>
-        {% if active_mode != seller_mode %}
-        <div style="color: #95a5a6; font-size: 0.8rem; margin-bottom: 0.5rem;">Sold by {{ book.seller.username }}</div>
-        {% endif %}
-        {% if active_mode == seller_mode %}
-          {% if book.is_sold %}
-          <div style="background: #fef0f0; color: #c0392b; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; font-weight: 600; margin-bottom: 0.5rem;">
-            Sold
+      <div class="market-field">
+        <label for="seller-sort-filter">Order by</label>
+        <select id="seller-sort-filter" name="sort">
+          <option value="">Most recent</option>
+          <option value="views" {% if seller_sort == 'views' %}selected{% endif %}>Most views</option>
+          <option value="saved" {% if seller_sort == 'saved' %}selected{% endif %}>Most saved</option>
+        </select>
+      </div>
+
+      <div class="market-filter-actions">
+        <button type="submit" class="btn btn-search-custom">Apply</button>
+        <a href="{% url 'book_list' %}" class="btn btn-clean-custom">Clear</a>
+      </div>
+    </form>
+  </section>
+  {% else %}
+  <section class="market-hero">
+    <div>
+      <span class="market-kicker">Marketplace</span>
+      <h1 class="market-title">Find second-hand books worth keeping.</h1>
+      <p class="market-subtitle">Browse affordable titles from other readers, filter by genre, and discover the next addition to your shelf without the clutter of generic listings.</p>
+    </div>
+  </section>
+
+  <section class="market-filter">
+    <form method="GET" id="book-search-form" class="market-filter-form">
+      <div class="market-field">
+        <label for="book-search-title">Title</label>
+        <input type="text" id="book-search-title" name="q" value="{{ query_params.q|default:'' }}" placeholder="Search by title" />
+      </div>
+
+      <div class="market-field">
+        <label for="book-search-genre">Genre</label>
+        <select id="book-search-genre" name="genre">
+          <option value="">All genres</option>
+          {% for genre_value, genre_label in genre_choices %}
+          <option value="{{ genre_value }}" {% if query_params.genre == genre_value %}selected{% endif %}>{{ genre_label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="market-field">
+        <label for="book-search-price">Max Price (€)</label>
+        <input type="number" id="book-search-price" name="max_price" value="{{ query_params.max_price|default:'' }}" step="0.01" placeholder="No limit" />
+      </div>
+
+      <div class="market-filter-actions">
+        <button type="submit" class="btn btn-search-custom">Search</button>
+        <a href="{% url 'book_list' %}" class="btn btn-clean-custom">Clear</a>
+      </div>
+    </form>
+  </section>
+  {% endif %}
+
+  {% if books %}
+  <div class="{% if active_mode == seller_mode %}seller-books-grid{% else %}books-grid{% endif %}">
+    {% for book in books %}
+    <a href="{% url 'book_detail' book.id %}" class="book-card-link {% if active_mode == seller_mode %}seller-card-link{% endif %}">
+      <article class="book">
+        <div class="book-image">
+          {% if book.image %}
+          <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 100%; height: 100%; object-fit: cover" />
+          {% else %}
+          📖
+          {% endif %}
+
+          {% if active_mode == seller_mode %}
+            {% if book.is_sold %}
+            <span class="seller-badge sold">Sold</span>
+            {% elif book.is_active %}
+            <span class="seller-badge live">Live on Market</span>
+            {% else %}
+            <span class="seller-badge inactive">Inactive</span>
+            {% endif %}
+          {% endif %}
+        </div>
+        <div class="book-content market-card-content">
+          <div>
+            <div class="book-title">{{ book.title }}</div>
+            <div class="book-meta">by {{ book.author }}</div>
           </div>
-          {% elif book.is_active %}
-          <div style="background: #e0f2f1; color: #00796b; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; font-weight: 600; margin-bottom: 0.5rem;">
-            Live on Market
+
+          <div class="book-meta">{{ book.genre }} · {{ book.get_condition_display }}</div>
+
+          {% if active_mode == seller_mode %}
+          <div class="seller-card-body">
+            <div class="seller-status-row">
+              <span class="seller-status-main">
+                {% if book.is_sold %}
+                <i data-lucide="badge-check"></i>
+                Sold
+                {% elif book.is_active %}
+                <i data-lucide="store"></i>
+                Live on Market
+                {% else %}
+                <i data-lucide="pause-circle"></i>
+                Inactive
+                {% endif %}
+              </span>
+              <span class="seller-status-note">Listed {{ book.created_at|timesince }} ago</span>
+            </div>
+
+            <div class="seller-insights">
+              <div class="seller-insight">
+                <div class="seller-insight-top">
+                  <span class="seller-insight-label">Views</span>
+                  <i data-lucide="eye"></i>
+                </div>
+                <span class="seller-insight-value">{{ book.view_count }}</span>
+                <span class="seller-insight-note">People who opened the listing.</span>
+              </div>
+
+              <div class="seller-insight">
+                <div class="seller-insight-top">
+                  <span class="seller-insight-label">Saved</span>
+                  <i data-lucide="heart"></i>
+                </div>
+                <span class="seller-insight-value">{{ book.favorites_count }}</span>
+                <span class="seller-insight-note">Buyers who marked it for later.</span>
+              </div>
+            </div>
           </div>
           {% else %}
-          <div style="background: #f1f3f5; color: #636e72; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; font-weight: 600; margin-bottom: 0.5rem;">
-            Disabled
-          </div>
+          <div class="book-meta">Sold by {{ book.seller.username }}</div>
           {% endif %}
-        {% endif %}
 
-        <span
-          class="btn btn-details-custom"
-          style="width: 100%; justify-content: center; display: flex; align-items: center; padding: 0.6rem; border-radius: 8px; font-weight: 700 !important; text-decoration: none; font-size: 0.9rem;">
-            See Details
-        </span>
-      </div>
-    </div>
-  </a>
-  {% endfor %}
-</div>
-{% else %}
-<div class="empty-state">
-  <div class="empty-state-icon">📚</div>
-  <p>{% if active_mode == seller_mode %} No listings yet. Add one! {% else %} No books available in the moment{% endif %}</p>
-</div>
-{% endif %}
+          <div class="book-footer">
+            <span class="book-price-chip">{{ book.price }}€</span>
+            <span class="btn btn-details-custom">See Details</span>
+          </div>
+        </div>
+      </article>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <img src="/media/icon.png" alt="BookMarket icon" class="empty-state-icon" />
+    <p>{% if active_mode == seller_mode %}You have no listings yet. Add your first book to start building your shelf.{% else %}No books match the current filters right now.{% endif %}</p>
+  </div>
+  {% endif %}
+</section>
 
 {% if active_mode != seller_mode %}
 <script>
@@ -171,6 +691,28 @@
         form.requestSubmit();
       }, 350);
     });
+  })();
+</script>
+{% endif %}
+
+{% if active_mode == seller_mode %}
+<script>
+  (function () {
+    const form = document.querySelector(".seller-filter-form");
+    const titleInput = document.getElementById("seller-search-title");
+
+    if (!form) return;
+
+    let timeoutId;
+
+    if (titleInput) {
+      titleInput.addEventListener("input", function () {
+        window.clearTimeout(timeoutId);
+        timeoutId = window.setTimeout(function () {
+          form.requestSubmit();
+        }, 350);
+      });
+    }
   })();
 </script>
 {% endif %}

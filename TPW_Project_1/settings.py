@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#p%k#xbxz@nqn(p*%#r!o2*oo@dd7d7h%gl^)wrn%aw71wjn5v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['BookMarket.pythonanywhere.com']
 
 
 # Application definition

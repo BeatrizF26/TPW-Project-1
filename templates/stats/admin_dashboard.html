@@ -1,0 +1,378 @@
+{% extends 'base.html' %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  .admin-page {
+    max-width: 1120px;
+    margin: 1.5rem auto 3rem;
+    display: grid;
+    gap: 1.4rem;
+  }
+
+  .admin-hero {
+    padding: 2rem 2.2rem;
+    border-radius: 28px;
+    background:
+      radial-gradient(circle at top left, rgba(46,196,182,0.2), transparent 32%),
+      linear-gradient(145deg, #ffffff 0%, #f5fbfb 100%);
+    border: 1px solid rgba(36,50,63,0.08);
+    box-shadow: 0 18px 42px rgba(36,50,63,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .admin-kicker {
+    display: inline-block;
+    margin-bottom: 0.7rem;
+    padding: 0.35rem 0.78rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.78);
+    color: var(--primarydark);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .admin-title { margin: 0; font-size: 2.4rem; line-height: 1.05; color: var(--dark); }
+  .admin-subtitle { margin: 0.6rem 0 0; color: #6f8291; line-height: 1.7; }
+
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat { text-align: center; }
+  .hero-stat-value { display: block; font-size: 2rem; font-weight: 700; color: var(--primarydark); line-height: 1; }
+  .hero-stat-label { display: block; font-size: 0.75rem; font-weight: 700; color: #7d8e9a; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.25rem; }
+
+  .admin-card {
+    padding: 1.6rem 1.8rem;
+    border-radius: 26px;
+    background: white;
+    border: 1px solid rgba(36,50,63,0.08);
+    box-shadow: 0 12px 28px rgba(36,50,63,0.06);
+  }
+
+  .admin-section-title {
+    margin: 0 0 1.2rem;
+    font-size: 1.1rem;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .admin-section-title i { color: var(--primarydark); }
+
+  .admin-two-col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 1rem;
+  }
+
+  .admin-three-col {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 1rem;
+  }
+
+  /* leaderboard */
+  .lb-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid rgba(36,50,63,0.06);
+    font-size: 0.92rem;
+  }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-rank {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: rgba(46,196,182,0.12);
+    color: var(--primarydark);
+    font-size: 0.75rem; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-right: 0.6rem; flex-shrink: 0;
+  }
+  .lb-name { font-weight: 600; color: var(--dark); }
+  .lb-sub  { color: #7d8e9a; font-size: 0.82rem; }
+  .lb-val  { font-weight: 700; color: var(--primarydark); white-space: nowrap; }
+
+  /* users table */
+  .users-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .users-table th {
+    text-align: left; padding: 0.5rem 0.75rem;
+    color: #7d8e9a; font-size: 0.74rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border-bottom: 1px solid rgba(36,50,63,0.08);
+  }
+  .users-table td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid rgba(36,50,63,0.05);
+    color: var(--text); vertical-align: middle;
+  }
+  .users-table tr:last-child td { border-bottom: none; }
+  .users-table tr:hover td { background: rgba(46,196,182,0.04); }
+
+  .role-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 0.22rem 0.55rem; border-radius: 999px;
+    font-size: 0.74rem; font-weight: 700; margin-right: 3px;
+  }
+  .role-badge.buyer  { background: rgba(46,196,182,0.12); color: #00796b; }
+  .role-badge.seller { background: rgba(31,111,139,0.1);  color: #1f6f8b; }
+  .role-badge.staff  { background: rgba(255,107,107,0.12); color: #c0392b; }
+
+  @media (max-width: 900px) {
+    .admin-two-col, .admin-three-col { grid-template-columns: 1fr; }
+  }
+</style>
+
+<section class="admin-page">
+
+  <!-- Hero with key numbers inline -->
+  <div class="admin-hero">
+    <div>
+      <span class="admin-kicker">Admin Panel</span>
+      <h1 class="admin-title">Platform Overview</h1>
+      <p class="admin-subtitle">Stats, users and activity across BookMarket.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-value">{{ total_users }}</span>
+        <span class="hero-stat-label">Users</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">{{ total_books }}</span>
+        <span class="hero-stat-label">Books</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">{{ total_revenue|floatformat:0 }}€</span>
+        <span class="hero-stat-label">Revenue</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">{{ avg_review_rating }}</span>
+        <span class="hero-stat-label">Avg Rating</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts row -->
+  <div class="admin-three-col">
+    <!-- Sales over time -->
+    <div class="admin-card" style="grid-column: span 2;">
+      <h2 class="admin-section-title">
+        <i data-lucide="trending-up" style="width:17px;height:17px;"></i>
+        Sales Over Time
+      </h2>
+      <canvas id="salesChart" style="max-height:180px;"></canvas>
+    </div>
+
+    <!-- Books by genre -->
+    <div class="admin-card">
+      <h2 class="admin-section-title">
+        <i data-lucide="pie-chart" style="width:17px;height:17px;"></i>
+        Books by Genre
+      </h2>
+      <canvas id="genreChart" style="max-height:180px;"></canvas>
+    </div>
+  </div>
+
+  <!-- User roles bar chart + book status doughnut -->
+  <div class="admin-two-col">
+    <div class="admin-card">
+      <h2 class="admin-section-title">
+        <i data-lucide="users" style="width:17px;height:17px;"></i>
+        User Roles
+      </h2>
+      <canvas id="rolesChart" style="max-height:180px;"></canvas>
+    </div>
+
+    <div class="admin-card">
+      <h2 class="admin-section-title">
+        <i data-lucide="book-open" style="width:17px;height:17px;"></i>
+        Book Status
+      </h2>
+      <canvas id="bookStatusChart" style="max-height:180px;"></canvas>
+    </div>
+  </div>
+
+  <!-- Leaderboards -->
+  <div class="admin-two-col">
+    <div class="admin-card">
+      <h2 class="admin-section-title">
+        <i data-lucide="award" style="width:17px;height:17px;"></i>
+        Top Sellers by Revenue
+      </h2>
+      {% for s in top_sellers %}
+      <div class="lb-row">
+        <div style="display:flex;align-items:center;">
+          <span class="lb-rank">{{ forloop.counter }}</span>
+          <div>
+            <div class="lb-name">{{ s.seller__username }}</div>
+            <div class="lb-sub">{{ s.sales }} sale{{ s.sales|pluralize }}</div>
+          </div>
+        </div>
+        <span class="lb-val">{{ s.revenue|floatformat:2 }}€</span>
+      </div>
+      {% empty %}<p style="color:#7d8e9a;font-size:0.9rem;">No sales yet.</p>{% endfor %}
+    </div>
+
+    <div class="admin-card">
+      <h2 class="admin-section-title">
+        <i data-lucide="shopping-bag" style="width:17px;height:17px;"></i>
+        Top Buyers by Spend
+      </h2>
+      {% for b in top_buyers %}
+      <div class="lb-row">
+        <div style="display:flex;align-items:center;">
+          <span class="lb-rank">{{ forloop.counter }}</span>
+          <div>
+            <div class="lb-name">{{ b.buyer__username }}</div>
+            <div class="lb-sub">{{ b.purchases }} purchase{{ b.purchases|pluralize }}</div>
+          </div>
+        </div>
+        <span class="lb-val">{{ b.spent|floatformat:2 }}€</span>
+      </div>
+      {% empty %}<p style="color:#7d8e9a;font-size:0.9rem;">No purchases yet.</p>{% endfor %}
+    </div>
+  </div>
+
+  <!-- Users table -->
+  <div class="admin-card">
+    <h2 class="admin-section-title">
+      <i data-lucide="users" style="width:17px;height:17px;"></i>
+      All Users
+    </h2>
+    <div style="overflow-x:auto;">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Username</th><th>Email</th><th>Roles</th><th>Avg Rating</th><th>Joined</th><th>Last login</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td style="font-weight:600;">{{ u.username }}</td>
+            <td style="color:#6f8291;">{{ u.email|default:"—" }}</td>
+            <td>
+              {% if u.is_staff %}<span class="role-badge staff">staff</span>{% endif %}
+              {% if u.is_buyer %}<span class="role-badge buyer">buyer</span>{% endif %}
+              {% if u.is_seller %}<span class="role-badge seller">seller</span>{% endif %}
+            </td>
+            <td style="color:#6f8291;">{% if u.avg_rating %}{{ u.avg_rating|floatformat:1 }} ★{% else %}—{% endif %}</td>
+            <td style="color:#6f8291;">{{ u.date_joined|date:"d M Y" }}</td>
+            <td style="color:#6f8291;">{{ u.last_login|date:"d M Y"|default:"Never" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  const teal   = '#2ec4b6';
+  const tealDk = '#29b0a3';
+  const blue   = '#1f6f8b';
+  const red    = '#ff6b6b';
+  const amber  = '#f4a261';
+  const purple = '#9b59b6';
+
+  const palette = [teal, blue, red, amber, purple, '#27ae60', '#e67e22', '#8e44ad'];
+
+  // Sales over time (line)
+  new Chart(document.getElementById('salesChart'), {
+    type: 'line',
+    data: {
+      labels: {{ monthly_labels|safe }},
+      datasets: [{
+        label: 'Sales',
+        data: {{ monthly_counts|safe }},
+        borderColor: teal,
+        backgroundColor: 'rgba(46,196,182,0.1)',
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: teal,
+      }, {
+        label: 'Revenue (€)',
+        data: {{ monthly_revenues|safe }},
+        borderColor: blue,
+        backgroundColor: 'rgba(31,111,139,0.08)',
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: blue,
+        yAxisID: 'y2',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom' } },
+      scales: {
+        y:  { beginAtZero: true, ticks: { stepSize: 1 } },
+        y2: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+
+  // Books by genre (doughnut)
+  new Chart(document.getElementById('genreChart'), {
+    type: 'doughnut',
+    data: {
+      labels: {{ genre_labels|safe }},
+      datasets: [{ data: {{ genre_counts|safe }}, backgroundColor: palette }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
+    }
+  });
+
+  // User roles (bar)
+  new Chart(document.getElementById('rolesChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Buyers', 'Sellers', 'Both'],
+      datasets: [{
+        data: [{{ buyer_count }}, {{ seller_count }}, {{ both_count }}],
+        backgroundColor: [teal, blue, red],
+        borderRadius: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+    }
+  });
+
+  // Book status (doughnut)
+  new Chart(document.getElementById('bookStatusChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Active', 'Sold', 'Disabled'],
+      datasets: [{
+        data: [{{ active_books }}, {{ sold_books }}, {{ disabled_books }}],
+        backgroundColor: [teal, blue, tealDk],
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }
+    }
+  });
+</script>
+{% endblock %}

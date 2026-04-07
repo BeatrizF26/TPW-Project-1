@@ -2,236 +2,599 @@
 {% block content %}
 
 <style>
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 3rem;
+  .dashboard-page {
+    --paper: #fcfefd;
+    --ink: var(--text, #2c3e50);
+    --muted: #6f8291;
+    --line: #d9e4e6;
+    max-width: 1180px;
+    margin: 1.5rem auto 3rem;
+    color: var(--ink);
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .dashboard-hero {
+    display: block;
+    padding: 2.4rem 2.5rem;
+    border-radius: 30px;
+    background:
+      radial-gradient(circle at top left, rgba(46, 196, 182, 0.22), transparent 30%),
+      linear-gradient(155deg, #eefaf8 0%, #f8fbfc 100%);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 24px 60px rgba(36, 50, 63, 0.12);
+  }
+
+  .dashboard-kicker {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--primarydark);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .dashboard-title {
+    margin: 0;
+    font-size: 3rem;
+    line-height: 0.98;
+    color: var(--ink);
+  }
+
+  .dashboard-subtitle {
+    margin: 0.95rem 0 0;
+    max-width: 56ch;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1.15rem 1.2rem;
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 252, 0.98));
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 10px 26px rgba(36, 50, 63, 0.06);
+  }
+
+  .stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .stat-label {
+    color: var(--muted);
+    font-size: 0.74rem;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
+
+  .stat-icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--primarydark);
+    flex-shrink: 0;
+  }
+
+  .stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .stat-note {
+    display: block;
+    margin-top: 0.45rem;
+    color: var(--muted);
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+
+  .dashboard-section {
+    padding: 1.15rem 1.2rem 1.25rem;
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 252, 0.98));
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 10px 26px rgba(36, 50, 63, 0.06);
+  }
+
+  .dashboard-section.tinted {
+    background:
+      radial-gradient(circle at top left, rgba(46, 196, 182, 0.12), transparent 30%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 252, 0.98));
+  }
+
+  .section-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .section-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .section-title {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+
+  .section-icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--primarydark);
+  }
+
+  .section-subtitle {
+    margin: 0.35rem 0 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .dashboard-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+  }
+
+  .dashboard-filter-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 92px;
+    padding: 0.65rem 0.85rem;
+    border-radius: 999px;
+    color: #6f8291;
+    text-decoration: none;
+    font-size: 0.84rem;
+    font-weight: 700;
+  }
+
+  .dashboard-filter-link.active {
+    background: linear-gradient(135deg, rgba(31, 111, 139, 0.95), rgba(46, 196, 182, 0.95));
+    color: white;
+    box-shadow: 0 12px 24px rgba(31, 111, 139, 0.18);
+  }
+
+  .sales-list {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .sale-card {
+    padding: 1rem 1.05rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+  }
+
+  .sale-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) auto auto;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .sale-book {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-width: 0;
+  }
+
+  .sale-cover {
+    width: 48px;
+    height: 60px;
+    border-radius: 10px;
+    background: #eef2f3;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .sale-title {
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+  }
+
+  .sale-meta {
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+
+  .sale-price {
+    color: var(--primarydark);
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .sale-date {
+    color: #95a3ad;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
+  .sale-review {
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(36, 50, 63, 0.08);
+  }
+
+  .review-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+  }
+
+  .review-trigger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9aa6af;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .review-trigger:hover {
+    color: var(--primarydark);
+    background: rgba(46, 196, 182, 0.12);
+  }
+
+  .rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: #fff9e6;
+    color: #d39d05;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.82rem;
+  }
+
+  .review-comment {
+    display: none;
+    margin-top: 0.75rem;
+    padding: 0.95rem 1rem;
+    border-radius: 16px;
+    background: #fdfdfd;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    color: #55616b;
+    line-height: 1.6;
+    font-size: 0.9rem;
+  }
+
+  .review-comment.open {
+    display: block;
+  }
+
+  .awaiting-review {
+    color: #9aa6af;
+    font-size: 0.84rem;
+  }
+
+  .listing-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.82rem;
+  }
+
+  .listing-badge.active {
+    background: rgba(224, 242, 241, 0.92);
+    color: #00796b;
+  }
+
+  .listing-badge.disabled {
+    background: rgba(241, 243, 245, 0.94);
+    color: #636e72;
+  }
+
+  .listing-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(36, 50, 63, 0.08);
+  }
+
+  .listing-meta-item {
+    color: #6f8291;
+    font-size: 0.84rem;
+  }
+
+  .listing-meta-item strong {
+    display: block;
+    color: var(--ink);
+    font-size: 0.95rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .empty-sales {
+    padding: 3rem 2rem;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    text-align: center;
+    color: var(--muted);
+  }
+
+  @media (max-width: 980px) {
+    .dashboard-hero {
+      padding: 2rem;
     }
 
-    .stat-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        text-align: left;
+    .section-header {
+      align-items: start;
+      flex-direction: column;
     }
 
-    .stat-label {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+    .dashboard-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 720px) {
+    .dashboard-page {
+      margin: 1rem auto 2rem;
     }
 
-    .stat-value {
-        display: block;
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin: 0.5rem 0 0 0;
+    .dashboard-hero {
+      padding: 1.4rem;
+      border-radius: 24px;
     }
 
-    .card-revenue { border-top: 4px solid var(--primary); }
-    .card-sold { border-top: 4px solid var(--secondary); }
-    .card-active { border-top: 4px solid #3498db; }
-    .card-rating { border-top: 4px solid #f1c40f; }
-
-    .sales-table {
-        width: 100%;
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        border-collapse: collapse;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    .dashboard-title {
+      font-size: 2.2rem;
     }
 
-    .sales-table th {
-        background: #f8f9fa;
-        padding: 1.2rem 1rem;
-        text-align: left;
-        color: #7f8c8d;
-        font-size: 0.85rem;
-        text-transform: uppercase;
+    .dashboard-stats {
+      grid-template-columns: 1fr;
     }
 
-    .sales-table td {
-        padding: 1rem;
-        border-top: 1px solid #eee;
-        vertical-align: top;
+    .sale-top {
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
     }
 
-    .rating-badge {
-        background: #fff9e6;
-        color: #f1c40f;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-weight: bold;
-        font-size: 0.85rem;
+    .listing-meta-grid {
+      grid-template-columns: 1fr;
     }
-
-    .review-expanded {
-        max-height: 0;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        background: #fdfdfd;
-        font-size: 0.85rem;
-        color: #555;
-    }
-
-    .review-expanded.open {
-        max-height: 200px;
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 8px;
-        border: 1px solid #eee;
-    }
-
-    .btn-icon-eye {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #bdc3c7;
-        display: flex;
-        align-items: center;
-        padding: 5px;
-        border-radius: 4px;
-        transition: all 0.2s;
-    }
-
-    .btn-icon-eye:hover {
-        color: var(--primary);
-        background: rgba(46, 196, 182, 0.1);
-    }
-
-    .review-row {
-        display: none;
-        background-color: #fdfdfd;
-    }
-
-    .review-row.open {
-        display: table-row;
-    }
-
-    .review-container {
-        padding: 1.5rem;
-        border-left: 4px solid #f1c40f;
-        margin: 10px 20px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
-    }
+  }
 </style>
 
-<div style="max-width: 1000px; margin: 0 auto;">
-    <h1 style="margin-bottom: 0.5rem;">Seller Dashboard</h1>
-    <p style="color: #7f8c8d; margin-bottom: 2.5rem;">Overview of your performance and sales history.</p>
+<section class="dashboard-page">
+  <section class="dashboard-hero">
+    <div>
+      <span class="dashboard-kicker">Seller dashboard</span>
+      <h1 class="dashboard-title">Performance, reviews, and sales in one place.</h1>
+      <p class="dashboard-subtitle">Track how your storefront is performing, see how much revenue you have made, and review the feedback buyers leave after their purchases.</p>
+    </div>
+  </section>
 
-    <div class="stats-grid">
-        <div class="stat-card card-revenue">
-            <p class="stat-label">Total Revenue</p>
-            <span class="stat-value" style="color: var(--primary);">{{ total_revenue|floatformat:2 }}€</span>
-        </div>
+  <section class="dashboard-stats">
+    <article class="stat-card">
+      <div class="stat-top">
+        <p class="stat-label">Total revenue</p>
+        <i data-lucide="wallet" class="stat-icon"></i>
+      </div>
+      <span class="stat-value">{{ total_revenue|floatformat:2 }}€</span>
+      <span class="stat-note">Money earned from completed sales.</span>
+    </article>
 
-        <div class="stat-card card-sold">
-            <p class="stat-label">Books Sold</p>
-            <span class="stat-value" style="color: var(--secondary);">{{ books_sold_count }}</span>
-        </div>
+    <article class="stat-card">
+      <div class="stat-top">
+        <p class="stat-label">Books sold</p>
+        <i data-lucide="book-check" class="stat-icon"></i>
+      </div>
+      <span class="stat-value">{{ books_sold_count }}</span>
+      <span class="stat-note">Listings that already found a buyer.</span>
+    </article>
 
-        <div class="stat-card card-active">
-            <p class="stat-label">Active Ads</p>
-            <span class="stat-value" style="color: #3498db;">{{ active_ads_count }}</span>
-        </div>
+    <article class="stat-card">
+      <div class="stat-top">
+        <p class="stat-label">Active ads</p>
+        <i data-lucide="badge-check" class="stat-icon"></i>
+      </div>
+      <span class="stat-value">{{ active_ads_count }}</span>
+      <span class="stat-note">Books currently visible on the market.</span>
+    </article>
 
-        <div class="stat-card card-rating">
-            <p class="stat-label">Reputation</p>
-            <span class="stat-value" style="color: #f1c40f;">{{ avg_rating }}<span style="font-size: 1.5rem;">/5 ★</span></span>
+    <article class="stat-card">
+      <div class="stat-top">
+        <p class="stat-label">Reputation</p>
+        <i data-lucide="star" class="stat-icon"></i>
+      </div>
+      <span class="stat-value">{{ avg_rating }}/5</span>
+      <span class="stat-note">Average rating given by buyers.</span>
+    </article>
+  </section>
+
+  <section class="dashboard-section tinted">
+    <div class="section-header">
+      <div>
+        <div class="section-title-row">
+          <i data-lucide="receipt-text" class="section-icon"></i>
+          <h2 class="section-title">
+            {% if status_filter == 'active' %}
+            Active Listings
+            {% elif status_filter == 'disabled' %}
+            Disabled Listings
+            {% else %}
+            Recent Sales History
+            {% endif %}
+          </h2>
         </div>
+        <p class="section-subtitle">
+          {% if status_filter == 'active' %}
+          Review the books currently visible on the market.
+          {% elif status_filter == 'disabled' %}
+          See which listings are paused and ready to be reactivated later.
+          {% else %}
+          A clearer view of who bought your books, when the sale happened, and what feedback came after.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="dashboard-filter">
+        <a href="{% url 'seller_dashboard' %}?status=sold" class="dashboard-filter-link{% if status_filter == 'sold' %} active{% endif %}">Sold</a>
+        <a href="{% url 'seller_dashboard' %}?status=active" class="dashboard-filter-link{% if status_filter == 'active' %} active{% endif %}">Active</a>
+        <a href="{% url 'seller_dashboard' %}?status=disabled" class="dashboard-filter-link{% if status_filter == 'disabled' %} active{% endif %}">Disabled</a>
+      </div>
     </div>
 
-    <h2 style="margin-bottom: 1.5rem;">Recent Sales History</h2>
-    <table class="sales-table">
-        <thead>
-            <tr>
-                <th>Book Details</th>
-                <th>Buyer</th>
-                <th>Price</th>
-                <th>Date</th>
-                <th>Feedback</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for sale in sales %}
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="width: 40px; height: 50px; background: #eee; border-radius: 4px; overflow: hidden; flex-shrink: 0;">
-                                {% if sale.book.image %}<img src="{{ sale.book.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">{% endif %}
-                            </div>
-                            <span style="font-weight: 700;">{{ sale.book.title }}</span>
-                        </div>
-                    </td>
-                    <td>@{{ sale.buyer.username }}</td>
-                    <td style="font-weight: 700; color: var(--primary);">{{ sale.sale_price|floatformat:2 }}€</td>
-                    <td style="color: #7f8c8d; font-size: 0.9rem;">{{ sale.sale_date|date:"d/m/Y" }}</td>
-                    <td>
-                        {% if sale.book.review %}
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span class="rating-badge">★ {{ sale.book.review.rating }}</span>
-                                <button class="btn-icon-eye" onclick="toggleReview('rev-row-{{ sale.id }}', this)" title="Ver comentário">
-                                    <i data-lucide="eye" style="width: 18px; height: 18px;"></i>
-                                </button>
-                            </div>
-                        {% else %}
-                            <span style="color: #bdc3c7; font-size: 0.85rem;">Awaiting review</span>
-                        {% endif %}
-                    </td>
-                </tr>
+    {% if dashboard_items %}
+    <div class="sales-list">
+      {% if status_filter == 'sold' %}
+      {% for sale in dashboard_items %}
+      <article class="sale-card">
+        <div class="sale-top">
+          <div class="sale-book">
+            <div class="sale-cover">
+              {% if sale.book.image %}
+              <img src="{{ sale.book.image.url }}" alt="{{ sale.book.title }}" style="width: 100%; height: 100%; object-fit: cover;" />
+              {% endif %}
+            </div>
+            <div>
+              <div class="sale-title">{{ sale.book.title }}</div>
+              <div class="sale-meta">Bought by @{{ sale.buyer.username }}</div>
+            </div>
+          </div>
 
-                {% if sale.book.review %}
-                <tr id="rev-row-{{ sale.id }}" class="review-row">
-                    <td colspan="5">
-                        <div class="review-container">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                <strong style="color: var(--dark);">Comment from @{{ sale.buyer.username }}:</strong>
-                                <span style="color: #bdc3c7; font-size: 0.8rem;">{{ sale.book.review.created_at|date:"d/m/Y" }}</span>
-                            </div>
-                            <p style="margin: 0; font-style: italic; color: #555; line-height: 1.6;">
-                                "{{ sale.book.review.comment|default:'The buyer left a rating but no written comment.' }}"
-                            </p>
-                        </div>
-                    </td>
-                </tr>
-                {% endif %}
+          <div class="sale-price">{{ sale.sale_price|floatformat:2 }}€</div>
+          <div class="sale-date">{{ sale.sale_date|date:"d/m/Y" }}</div>
+        </div>
 
-            {% empty %}
-                <tr>
-                    <td colspan="5" style="text-align: center; padding: 4rem; color: #7f8c8d;">
-                        <i data-lucide="info" style="width: 30px; height: 30px; margin-bottom: 1rem; opacity: 0.5;"></i>
-                        <p>No sales recorded yet.</p>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        <div class="sale-review">
+          {% if sale.book.review %}
+          <div class="review-top">
+            <span class="rating-badge">
+              <i data-lucide="star" style="width: 14px; height: 14px;"></i>
+              {{ sale.book.review.rating }}
+            </span>
+            <button class="review-trigger" onclick="toggleReview('review-{{ sale.id }}', this)" title="Show comment">
+              <i data-lucide="eye" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+          <div id="review-{{ sale.id }}" class="review-comment">
+            "{{ sale.book.review.comment|default:'The buyer left a rating but no written comment.' }}"
+          </div>
+          {% else %}
+          <div class="awaiting-review">Awaiting review from the buyer.</div>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+      {% else %}
+      {% for book in dashboard_items %}
+      <article class="sale-card">
+        <div class="sale-top">
+          <div class="sale-book">
+            <div class="sale-cover">
+              {% if book.image %}
+              <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 100%; height: 100%; object-fit: cover;" />
+              {% endif %}
+            </div>
+            <div>
+              <div class="sale-title">{{ book.title }}</div>
+              <div class="sale-meta">{{ book.genre }} · {{ book.get_condition_display }}</div>
+            </div>
+          </div>
+
+          <div class="sale-price">{{ book.price|floatformat:2 }}€</div>
+          <div>
+            <span class="listing-badge {% if status_filter == 'active' %}active{% else %}disabled{% endif %}">
+              <i data-lucide="{% if status_filter == 'active' %}badge-check{% else %}pause-circle{% endif %}" style="width: 14px; height: 14px;"></i>
+              {% if status_filter == 'active' %}Active{% else %}Disabled{% endif %}
+            </span>
+          </div>
+        </div>
+
+        <div class="listing-meta-grid">
+          <div class="listing-meta-item">
+            <strong>{{ book.view_count }}</strong>
+            <span>Views</span>
+          </div>
+          <div class="listing-meta-item">
+            <strong>{{ book.favorites.count }}</strong>
+            <span>Saved by buyers</span>
+          </div>
+          <div class="listing-meta-item">
+            <strong>{{ book.created_at|date:"d/m/Y" }}</strong>
+            <span>Listed on</span>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="empty-sales">
+      <i data-lucide="info" style="width: 28px; height: 28px; margin-bottom: 0.8rem; opacity: 0.55;"></i>
+      <p>
+        {% if status_filter == 'active' %}
+        No active listings right now.
+        {% elif status_filter == 'disabled' %}
+        No disabled listings right now.
+        {% else %}
+        No sales recorded yet.
+        {% endif %}
+      </p>
+    </div>
+    {% endif %}
+  </section>
+</section>
 
 <script>
-function toggleReview(id, btn) {
-    const row = document.getElementById(id);
-    if (!row) return;
+  function toggleReview(id, btn) {
+    const comment = document.getElementById(id);
+    if (!comment) return;
 
-    row.classList.toggle('open');
+    comment.classList.toggle("open");
+    btn.style.color = comment.classList.contains("open") ? "var(--primarydark)" : "#9aa6af";
+  }
 
-    if (row.classList.contains('open')) {
-        btn.style.color = 'var(--primary)';
-    } else {
-        btn.style.color = '#bdc3c7';
-    }
-}
-
-if (window.lucide) {
+  if (window.lucide) {
     lucide.createIcons();
-}
+  }
 </script>
 {% endblock %}

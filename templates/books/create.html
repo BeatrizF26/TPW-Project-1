@@ -1,43 +1,139 @@
 {% extends 'base.html' %} {% block content %}
 <style>
-  .form-container {
-    max-width: 700px;
-    margin: 2rem auto;
-    background: white;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  .create-shell {
+    --paper: #fcfefd;
+    --ink: var(--text, #2c3e50);
+    --muted: #6f8291;
+    --line: #d9e4e6;
+    display: grid;
+    grid-template-columns: 0.92fr 1.08fr;
+    max-width: 1100px;
+    margin: 1.5rem auto 3rem;
+    border-radius: 30px;
+    overflow: hidden;
+    background: var(--paper);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 24px 56px rgba(36, 50, 63, 0.12);
+  }
+
+  .create-aside {
+    padding: 3rem;
+    background:
+      radial-gradient(circle at top left, rgba(46, 196, 182, 0.2), transparent 32%),
+      linear-gradient(160deg, #eefaf8 0%, #f7fbfb 100%);
+  }
+
+  .create-kicker {
+    display: inline-block;
+    margin-bottom: 1.25rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--primarydark);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .create-aside h1 {
+    margin-bottom: 1rem;
+    font-size: 2.6rem;
+    line-height: 1.04;
+  }
+
+  .create-aside p {
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 28ch;
+    margin-bottom: 2rem;
+  }
+
+  .create-notes {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .create-note {
+    padding: 1rem 1.05rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 10px 22px rgba(36, 50, 63, 0.06);
+  }
+
+  .create-note strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: var(--ink);
+  }
+
+  .create-note span {
+    color: var(--muted);
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
+
+  .create-panel {
+    padding: 3rem;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.99)),
+      var(--paper);
   }
 
   .form-title {
+    margin: 0 0 0.55rem;
     font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
     color: var(--dark);
   }
 
+  .form-subtitle {
+    margin-bottom: 2rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 48ch;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.1rem;
+  }
+
+  .span-2 {
+    grid-column: span 2;
+  }
+
   .form-group {
-    margin-bottom: 1.5rem;
+    margin: 0;
+  }
+
+  .form-group.align-end {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
 
   .form-group label {
     display: block;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 0.5rem;
-    color: var(--text);
-    font-size: 0.95rem;
+    color: var(--ink);
+    font-size: 0.94rem;
   }
 
   .form-group input,
   .form-group select,
   .form-group textarea {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    padding: 0.9rem 0.95rem;
+    border: 1px solid var(--line);
+    border-radius: 16px;
     font-size: 1rem;
     font-family: inherit;
-    transition: border-color 0.3s ease;
+    background: #fff;
+    color: var(--ink);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
 
   .form-group input:focus,
@@ -45,22 +141,158 @@
   .form-group textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.1);
+    box-shadow: 0 0 0 4px rgba(46, 196, 182, 0.12);
+    transform: translateY(-1px);
   }
 
   .form-group textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 64px;
+      max-height: 80px;
   }
 
-  .form-group select {
-    cursor: pointer;
+  .help-copy {
+    margin-top: 0.35rem;
+    color: #7d8e9a;
+    font-size: 0.84rem;
   }
 
   .form-errors {
     color: var(--secondary);
     font-size: 0.85rem;
-    margin-top: 0.25rem;
+    margin-top: 0.35rem;
+  }
+
+  .image-edit-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border: none;
+    border-radius: 12px;
+    background: rgba(31, 111, 139, 0.1);
+    color: #1f6f8b;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .image-edit-trigger:hover {
+    background: rgba(31, 111, 139, 0.16);
+  }
+
+  .image-edit-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(20, 31, 43, 0.42);
+    backdrop-filter: blur(5px);
+    z-index: 1200;
+  }
+
+  .image-edit-modal.open {
+    display: flex;
+  }
+
+  .image-edit-card {
+    width: min(100%, 820px);
+    padding: 1.5rem;
+    border-radius: 28px;
+    background:
+      radial-gradient(circle at top left, rgba(46, 196, 182, 0.14), transparent 32%),
+      linear-gradient(155deg, #ffffff 0%, #f7fbfc 100%);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 24px 60px rgba(17, 24, 39, 0.18);
+  }
+
+  .image-edit-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .image-edit-title {
+    margin: 0;
+    font-size: 1.35rem;
+    color: var(--dark);
+  }
+
+  .image-edit-close {
+    border: none;
+    background: #eef2f3;
+    color: var(--text);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+  }
+
+  .image-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .image-edit-panel {
+    padding: 1rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+  }
+
+  .image-edit-label {
+    display: block;
+    margin-bottom: 0.7rem;
+    color: #7d8e9a;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .image-edit-preview {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 16px;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    background: #f4f8f9;
+    object-fit: cover;
+    display: block;
+  }
+
+  .image-edit-empty {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 16px;
+    border: 1px dashed rgba(36, 50, 63, 0.16);
+    background: #f4f8f9;
+    color: #7d8e9a;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 1rem;
+    line-height: 1.5;
+  }
+
+  .image-edit-input {
+    margin-top: 0.9rem;
+  }
+
+  .image-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
   }
 
   .form-actions {
@@ -71,35 +303,36 @@
 
   .btn-submit {
     flex: 1;
-    padding: 0.9rem;
-    background-color: var(--primary);
+    padding: 1rem 1.2rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primarydark) 100%);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 18px;
     font-size: 1rem;
     font-weight: 700;
+    font-family: inherit;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 16px 30px rgba(46, 196, 182, 0.24);
   }
 
   .btn-submit:hover {
-    background-color: #26a89e;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3);
+    box-shadow: 0 20px 36px rgba(46, 196, 182, 0.3);
   }
 
   .btn-cancel {
     flex: 1;
-    padding: 0.9rem;
-    background-color: var(--grey);
+    padding: 1rem 1.2rem;
+    background: #eef2f3;
     color: var(--text);
     border: none;
-    border-radius: 8px;
+    border-radius: 18px;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: background-color 0.2s ease;
     text-align: center;
     display: flex;
     align-items: center;
@@ -107,29 +340,242 @@
   }
 
   .btn-cancel:hover {
-    background-color: #dee2e6;
+    background-color: #dfe8ea;
+  }
+
+  @media (max-width: 920px) {
+    .create-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .create-aside,
+    .create-panel {
+      padding: 2rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .form-grid,
+    .form-actions {
+      grid-template-columns: 1fr;
+      display: grid;
+    }
+
+    .span-2 {
+      grid-column: span 1;
+    }
+
+    .create-aside,
+    .create-panel {
+      padding: 1.4rem;
+    }
+
+    .create-aside h1 {
+      font-size: 2.1rem;
+    }
+
+    .image-edit-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
-<div class="form-container">
-  <h1 class="form-title">Add Book</h1>
+<section class="create-shell">
+  <aside class="create-aside">
+    <h1>{% if is_edit_mode %}Refine the listing until it converts better.{% else %}List a book that feels worth discovering.{% endif %}</h1>
+    <p>{% if is_edit_mode %}If a book is not moving, update the price, improve the description, or adjust the condition details until the listing feels stronger to buyers.{% else %}Good listings convert faster. Add the essentials, choose a clear genre from the catalog, and give buyers enough context to trust what they are buying.{% endif %}</p>
 
-  <form method="POST" enctype="multipart/form-data" novalidate>
-    {% csrf_token %} {% for field in form %}
-    <div class="form-group">
-      {% if field.label %}
-      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-      {% endif %} {{ field }} {% if field.errors %}
-      <div class="form-errors">{{ field.errors.0 }}</div>
-      {% endif %}
+    <div class="create-notes">
+      <div class="create-note">
+        <strong>{% if is_edit_mode %}Adjust what is not working{% else %}Use the right genre{% endif %}</strong>
+        <span>{% if is_edit_mode %}High views with low saves often mean the price, cover, or description still need improvement.{% else %}Buyers can now filter by a predefined genre list, so accurate categorization matters more.{% endif %}</span>
+      </div>
+      <div class="create-note">
+        <strong>{% if is_edit_mode %}Price can be updated{% else %}Be specific about condition{% endif %}</strong>
+        <span>{% if is_edit_mode %}If 20€ is too high for the market, lower it and test whether buyers react better to the new price.{% else %}Clear condition details reduce hesitation and make your listing feel more reliable.{% endif %}</span>
+      </div>
+      <div class="create-note">
+        <strong>{% if is_edit_mode %}Keep the listing trustworthy{% else %}Add a strong description{% endif %}</strong>
+        <span>{% if is_edit_mode %}Small improvements in wording and transparency can be enough to turn interest into a sale.{% else %}Mention edition details, highlights, marks, or anything else a buyer should know before purchasing.{% endif %}</span>
+      </div>
     </div>
-    {% endfor %}
+  </aside>
 
-    <div class="form-actions">
-      <button type="submit" class="btn-submit">Create Book</button>
-      <a href="/" class="btn-cancel">Cancel</a>
+  <div class="create-panel">
+    <h1 class="form-title">{% if is_edit_mode %}Edit Book{% else %}Add Book{% endif %}</h1>
+    <p class="form-subtitle">{% if is_edit_mode %}Update the details below to give this listing a better chance of selling. You can change the price, description, condition, image, and the rest of the book information.{% else %}Fill in the listing details below. Genre and condition now use predefined choices so the marketplace stays cleaner and easier to search.{% endif %}</p>
+
+    <form method="POST" enctype="multipart/form-data" novalidate id="book-form">
+      {% csrf_token %}
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+          {{ form.title }}
+          {% if form.title.errors %}
+          <div class="form-errors">{{ form.title.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.author.id_for_label }}">{{ form.author.label }}</label>
+          {{ form.author }}
+          {% if form.author.errors %}
+          <div class="form-errors">{{ form.author.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.genre.id_for_label }}">{{ form.genre.label }}</label>
+          {{ form.genre }}
+          {% if form.genre.errors %}
+          <div class="form-errors">{{ form.genre.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.price.id_for_label }}">{{ form.price.label }}</label>
+          {{ form.price }}
+          {% if form.price.errors %}
+          <div class="form-errors">{{ form.price.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group span-2">
+          <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+          {{ form.description }}
+          {% if form.description.errors %}
+          <div class="form-errors">{{ form.description.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.condition.id_for_label }}">{{ form.condition.label }}</label>
+          {{ form.condition }}
+          {% if form.condition.errors %}
+          <div class="form-errors">{{ form.condition.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group align-end">
+          <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+          {% if is_edit_mode and book.image %}
+          <button type="button" class="image-edit-trigger" id="open-image-modal">
+            <i data-lucide="pencil-line" style="width: 16px; height: 16px;"></i>
+            Edit
+          </button>
+          {% else %}
+            {{ form.image }}
+          {% endif %}
+          {% if form.image.errors %}
+          <div class="form-errors">{{ form.image.errors.0 }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">{% if is_edit_mode %}Save Changes{% else %}Create Book{% endif %}</button>
+        <a href="{% if is_edit_mode %}{% url 'book_detail' book.id %}{% else %}{% url 'book_list' %}{% endif %}" class="btn-cancel">Cancel</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+{% if is_edit_mode and book.image %}
+<div class="image-edit-modal" id="image-edit-modal" aria-hidden="true">
+  <div class="image-edit-card" role="dialog" aria-modal="true" aria-labelledby="image-edit-title">
+    <div class="image-edit-top">
+      <h2 class="image-edit-title" id="image-edit-title">Edit image</h2>
+      <button type="button" class="image-edit-close" id="close-image-modal">X</button>
     </div>
-  </form>
+
+    <div class="image-edit-grid">
+      <div class="image-edit-panel">
+        <span class="image-edit-label">Current image</span>
+        <img src="{{ book.image.url }}" alt="{{ book.title }}" class="image-edit-preview" />
+      </div>
+
+      <div class="image-edit-panel">
+        <span class="image-edit-label">New image</span>
+        <img src="" alt="New selected cover" class="image-edit-preview" id="new-image-preview" style="display: none;" />
+        <div class="image-edit-empty" id="new-image-empty">Choose a new file to preview it here.</div>
+        <div class="image-edit-input">
+          <input type="file" name="image" id="{{ form.image.id_for_label }}" accept="image/*" form="book-form" />
+        </div>
+      </div>
+    </div>
+
+    <div class="image-edit-actions">
+      <button type="button" class="btn-cancel" id="done-image-modal" style="flex: 0 0 auto; padding: 0.85rem 1.1rem;">Done</button>
+    </div>
+  </div>
 </div>
+
+<script>
+  (function () {
+    const imageModal = document.getElementById("image-edit-modal");
+    const openImageModalBtn = document.getElementById("open-image-modal");
+    const closeImageModalBtn = document.getElementById("close-image-modal");
+    const doneImageModalBtn = document.getElementById("done-image-modal");
+    const imageInput = document.getElementById("{{ form.image.id_for_label }}");
+    const preview = document.getElementById("new-image-preview");
+    const emptyState = document.getElementById("new-image-empty");
+
+    function closeImageModal() {
+      if (!imageModal) return;
+      imageModal.classList.remove("open");
+      imageModal.setAttribute("aria-hidden", "true");
+    }
+
+    if (openImageModalBtn) {
+      openImageModalBtn.addEventListener("click", function () {
+        imageModal.classList.add("open");
+        imageModal.setAttribute("aria-hidden", "false");
+      });
+    }
+
+    if (closeImageModalBtn) {
+      closeImageModalBtn.addEventListener("click", closeImageModal);
+    }
+
+    if (doneImageModalBtn) {
+      doneImageModalBtn.addEventListener("click", closeImageModal);
+    }
+
+    if (imageModal) {
+      imageModal.addEventListener("click", function (event) {
+        if (event.target === imageModal) {
+          closeImageModal();
+        }
+      });
+    }
+
+    if (imageInput && preview && emptyState) {
+      imageInput.addEventListener("change", function (event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) {
+          preview.style.display = "none";
+          preview.removeAttribute("src");
+          emptyState.style.display = "grid";
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (loadEvent) {
+          preview.src = loadEvent.target.result;
+          preview.style.display = "block";
+          emptyState.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeImageModal();
+      }
+    });
+  })();
+</script>
+{% endif %}
 
 {% endblock %}

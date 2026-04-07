@@ -2,120 +2,330 @@
 {% block content %}
 
 <style>
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    input[type=number] {
-        -moz-appearance: textfield;
-    }
+  .review-page {
+    max-width: 1120px;
+    margin: 1.5rem auto 3rem;
+    display: grid;
+    gap: 1.4rem;
+  }
 
-    .rating-wrapper {
-        position: relative;
-        display: inline-flex;
-        font-size: 2rem;
-        margin: 1rem 0;
-        user-select: none;
-    }
+  .review-shell {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
 
-    .stars-grey {
-        display: flex;
-        color: #bdc3c7;
-    }
+  /* ── Left: cover card ── */
+  .review-cover-card {
+    border-radius: 28px;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 18px 42px rgba(36, 50, 63, 0.08);
+    overflow: hidden;
+    background:
+      radial-gradient(circle at top left, rgba(46, 196, 182, 0.16), transparent 34%),
+      linear-gradient(160deg, #f7fcfb 0%, #eef8f7 100%);
+  }
 
-    .stars-gold {
-        display: flex;
-        color: #f1c40f;
-        position: absolute;
-        top: 0;
-        left: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        width: 0%;
-        transition: width 0.3s ease;
-    }
+  .review-cover-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
 
-    .star-icon {
-        width: 35px;
-        height: 35px;
-        flex-shrink: 0;
-    }
+  .review-cover-image {
+    width: 100%;
+    object-fit: contain;
+    border-radius: 22px;
+    box-shadow: 0 22px 42px rgba(17, 24, 39, 0.16);
+  }
+
+  .review-cover-fallback {
+    width: 100%;
+    min-height: 420px;
+    border-radius: 22px;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(circle at top, rgba(255,255,255,0.92), transparent 34%),
+      linear-gradient(145deg, rgba(31,111,139,0.16), rgba(46,196,182,0.3));
+    color: #1f6f8b;
+  }
+
+  .review-cover-fallback i { width: 80px; height: 80px; }
+
+  /* ── Right: form card ── */
+  .review-form-card {
+    border-radius: 28px;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 18px 42px rgba(36, 50, 63, 0.08);
+    padding: 2rem;
+    background:
+      radial-gradient(circle at top left, rgba(46, 196, 182, 0.16), transparent 30%),
+      linear-gradient(160deg, #ffffff 0%, #f8fbfc 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .review-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.82);
+    color: var(--primarydark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .review-title {
+    margin: 0;
+    font-size: 2.2rem;
+    line-height: 1.05;
+    color: var(--dark);
+  }
+
+  .review-subtitle {
+    margin: 0.4rem 0 0;
+    color: #6f8291;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* meta mini-cards */
+  .review-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  .review-meta-card {
+    padding: 0.85rem 1rem;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.82);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+  }
+
+  .review-meta-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #7d8e9a;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .review-meta-value {
+    color: var(--dark);
+    font-size: 0.97rem;
+    font-weight: 700;
+  }
+
+  /* star widget */
+  .star-icon { width: 34px; height: 34px; flex-shrink: 0; cursor: pointer; }
+
+  .rating-wrapper {
+    position: relative;
+    display: inline-flex;
+    font-size: 2rem;
+    user-select: none;
+  }
+
+  .stars-grey { display: flex; color: #bdc3c7; }
+
+  .stars-gold {
+    display: flex;
+    color: #f1c40f;
+    position: absolute;
+    top: 0; left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0%;
+    transition: width 0.25s ease;
+  }
+
+  /* form fields */
+  .review-field label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #4f6270;
+    margin-bottom: 0.45rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .review-number-input {
+    width: 110px;
+    padding: 0.7rem;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    border: 2px solid var(--primary);
+    border-radius: 14px;
+    outline: none;
+    font-family: inherit;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  .review-textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(36, 50, 63, 0.14);
+    font-family: inherit;
+    font-size: 0.97rem;
+    resize: vertical;
+    background: rgba(255,255,255,0.9);
+    box-sizing: border-box;
+  }
+
+  .review-submit {
+    width: 100%;
+    justify-content: center;
+    font-weight: 700;
+    padding: 1rem;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .back-link-custom {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #7f8c8d;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .back-link-custom:hover { text-decoration: underline !important; }
+
+  @media (max-width: 860px) {
+    .review-shell { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .review-meta-grid { grid-template-columns: 1fr; }
+  }
 </style>
 
-<div style="max-width: 500px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-    <h2 style="text-align: center;">Rate your purchase</h2>
-    <p style="color: #7f8c8d; text-align: center;">How was your experience with <strong>{{ book.title }}</strong>?</p>
+<section class="review-page">
+  <a href="{% url 'my_purchases' %}" class="back-link-custom">
+    <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+    Back to purchases
+  </a>
 
-    <form method="POST" style="margin-top: 2rem; text-align: center;">
+  <section class="review-shell">
+    <!-- Left: book cover -->
+    <article class="review-cover-card">
+      <div class="review-cover-frame">
+        {% if book.image %}
+        <img src="{{ book.image.url }}" alt="{{ book.title }}" class="review-cover-image" />
+        {% else %}
+        <div class="review-cover-fallback">
+          <i data-lucide="book-open-text"></i>
+        </div>
+        {% endif %}
+      </div>
+    </article>
+
+    <!-- Right: form -->
+    <div class="review-form-card">
+      <div>
+        <span class="review-kicker">
+          <i data-lucide="star" style="width: 13px; height: 13px;"></i>
+          {% if review %}Edit review{% else %}Leave a review{% endif %}
+        </span>
+        <h1 class="review-title">{{ book.title }}</h1>
+        <p class="review-subtitle">by {{ book.author }}</p>
+      </div>
+
+      <div class="review-meta-grid">
+        <div class="review-meta-card">
+          <span class="review-meta-label">Genre</span>
+          <span class="review-meta-value">{{ book.genre }}</span>
+        </div>
+        <div class="review-meta-card">
+          <span class="review-meta-label">Condition</span>
+          <span class="review-meta-value">{{ book.get_condition_display }}</span>
+        </div>
+        <div class="review-meta-card">
+          <span class="review-meta-label">Seller</span>
+          <span class="review-meta-value">{{ book.seller.username }}</span>
+        </div>
+        <div class="review-meta-card">
+          <span class="review-meta-label">Price paid</span>
+          <span class="review-meta-value">{{ book.price }}€</span>
+        </div>
+      </div>
+
+      <form method="POST" style="display: flex; flex-direction: column; gap: 1.2rem;">
         {% csrf_token %}
 
-        <div style="margin-bottom: 1rem;">
-            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">
-                Rating (1.0 to 5.0)
-            </label>
+        <div class="review-field">
+          <label>Rating (1.0 – 5.0)</label>
+          <div style="display: flex; align-items: center; gap: 1rem;">
             <input type="number"
-               name="rating"
-               id="ratingInput"
-               step="0.1"
-               min="1"
-               max="5"
-               placeholder="0.0"
-               required
-               value="{{ review.rating|default:'' }}"
-               style="width: 120px; display: block; margin: 0 auto; padding: 0.75rem; text-align: center; font-size: 1.5rem; font-weight: 800; border: 2px solid var(--primary); border-radius: 12px; outline: none;">
-        </div>
-
-        <div class="rating-wrapper">
-            <div class="stars-grey">
-                <i data-lucide="star" class="star-icon"></i>
-                <i data-lucide="star" class="star-icon"></i>
-                <i data-lucide="star" class="star-icon"></i>
-                <i data-lucide="star" class="star-icon"></i>
-                <i data-lucide="star" class="star-icon"></i>
+                   name="rating"
+                   id="ratingInput"
+                   class="review-number-input"
+                   step="0.1" min="1" max="5"
+                   placeholder="0.0"
+                   required
+                   value="{{ review.rating|default:'' }}">
+            <div class="rating-wrapper">
+              <div class="stars-grey">
+                {% for i in "12345"|make_list %}<i data-lucide="star" class="star-icon"></i>{% endfor %}
+              </div>
+              <div class="stars-gold" id="goldLayer">
+                {% for i in "12345"|make_list %}<i data-lucide="star" class="star-icon" fill="currentColor"></i>{% endfor %}
+              </div>
             </div>
-            <div class="stars-gold" id="goldLayer">
-                <i data-lucide="star" class="star-icon" fill="currentColor"></i>
-                <i data-lucide="star" class="star-icon" fill="currentColor"></i>
-                <i data-lucide="star" class="star-icon" fill="currentColor"></i>
-                <i data-lucide="star" class="star-icon" fill="currentColor"></i>
-                <i data-lucide="star" class="star-icon" fill="currentColor"></i>
-            </div>
+          </div>
         </div>
 
-        <div style="text-align: left; margin-top: 1.5rem;">
-            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Comment</label>
-            <textarea name="comment" rows="4" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1.5rem; font-family: inherit; resize: vertical;">{{ review.comment|default:'' }}</textarea>
+        <div class="review-field">
+          <label>Comment</label>
+          <textarea name="comment" rows="4" class="review-textarea">{{ review.comment|default:'' }}</textarea>
         </div>
 
-        <button type="submit" class="btn" style="width: 100%; background: var(--primary); color: white; justify-content: center; font-weight: 700; padding: 1rem; border-radius: 8px;">
-            {% if review %}Update Review{% else %}Submit Review{% endif %}
+        <button type="submit" class="btn review-submit">
+          <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+          {% if review %}Update Review{% else %}Submit Review{% endif %}
         </button>
-    </form>
-</div>
+      </form>
+    </div>
+  </section>
+</section>
 
 <script>
-    const ratingInput = document.getElementById('ratingInput');
-    const goldLayer = document.getElementById('goldLayer');
+  const ratingInput = document.getElementById('ratingInput');
+  const goldLayer = document.getElementById('goldLayer');
 
-    function updateStarsView(value) {
-        let val = parseFloat(value);
-        if (isNaN(val)) val = 0;
-        if (val > 5) val = 5;
-        if (val < 0) val = 0;
+  function updateStars(value) {
+    let val = parseFloat(value);
+    if (isNaN(val) || val < 0) val = 0;
+    if (val > 5) val = 5;
+    goldLayer.style.width = (val / 5 * 100) + '%';
+  }
 
-        const percentage = (val / 5) * 100;
-        goldLayer.style.width = percentage + "%";
-    }
-
-    ratingInput.addEventListener('input', (e) => {
-        updateStarsView(e.target.value);
-    });
-
-    window.addEventListener('load', () => {
-        if (ratingInput.value) updateStarsView(ratingInput.value);
-        if (window.lucide) lucide.createIcons();
-    });
+  ratingInput.addEventListener('input', e => updateStars(e.target.value));
+  window.addEventListener('load', () => {
+    if (ratingInput.value) updateStars(ratingInput.value);
+    if (window.lucide) lucide.createIcons();
+  });
 </script>
 
 {% endblock %}

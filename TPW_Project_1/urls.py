@@ -23,6 +23,8 @@ from django.shortcuts import redirect
 
 def initial_redirect(request):
     if request.user.is_authenticated:
+        if request.user.is_staff:
+            return redirect('admin_dashboard')
         return redirect('book_list')
     return redirect('login')
 

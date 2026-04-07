@@ -1,5 +1,33 @@
 {% extends 'base.html' %} {% block content %}
 <style>
+  .container {
+    max-width: 1280px;
+    padding-top: 2rem;
+  }
+
+  nav,
+  .nav-brand,
+  .nav-item,
+  .nav-links a {
+    font-family: Georgia, "Times New Roman", serif;
+  }
+
+  nav {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(252, 254, 253, 0.92));
+    border-bottom-color: rgba(46, 196, 182, 0.35);
+    justify-content: center;
+  }
+
+  .nav-brand {
+    letter-spacing: 0.02em;
+  }
+
+  .nav-item,
+  .nav-links a {
+    font-size: 0.98rem;
+  }
+
   .register-shell {
     --paper: #fcfefd;
     --ink: var(--text, #2c3e50);
@@ -61,17 +89,21 @@
 
   .register-points {
     display: grid;
-    gap: 0.9rem;
+    gap: 1rem;
     position: relative;
     z-index: 1;
+    margin-top: 2.25rem;
   }
 
   .register-point {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    color: var(--ink);
-    font-weight: 600;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem 1rem;
+    padding: 1rem 1.05rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    box-shadow: 0 12px 24px rgba(36, 50, 63, 0.06);
   }
 
   .register-point-bullet {
@@ -81,9 +113,26 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(36, 50, 63, 0.08);
-    font-size: 0.95rem;
+    background: var(--accent-soft);
+    border: 1px solid rgba(46, 196, 182, 0.24);
+    color: var(--accent-strong);
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-top: 0.12rem;
+  }
+
+  .register-point-copy strong {
+    display: block;
+    color: var(--ink);
+    font-size: 1rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .register-point-copy span {
+    display: block;
+    color: var(--muted);
+    line-height: 1.55;
+    font-size: 0.94rem;
   }
 
   .register-form-panel {
@@ -339,15 +388,24 @@
     <div class="register-points">
       <div class="register-point">
         <span class="register-point-bullet">01</span>
-        <span>Create a single BookMarket account</span>
+        <div class="register-point-copy">
+          <strong>Create your account</strong>
+          <span>Set up one profile with the details you need for every future visit.</span>
+        </div>
       </div>
       <div class="register-point">
         <span class="register-point-bullet">02</span>
-        <span>Choose whether to start as buyer or seller</span>
+        <div class="register-point-copy">
+          <strong>Pick your starting mode</strong>
+          <span>Begin as a buyer or seller depending on what you want to do first.</span>
+        </div>
       </div>
       <div class="register-point">
         <span class="register-point-bullet">03</span>
-        <span>Add the second mode later without changing account</span>
+        <div class="register-point-copy">
+          <strong>Expand later</strong>
+          <span>Add the second mode from your profile without creating another account.</span>
+        </div>
       </div>
     </div>
   </aside>

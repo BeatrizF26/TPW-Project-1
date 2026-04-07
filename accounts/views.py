@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from books.models import Purchase
+from django.db.models import Sum
+from books.models import Purchase, Book
 from .mode import BUYER_MODE, SELLER_MODE, get_active_mode, set_active_mode
 from .forms import (
     RegisterForm,
@@ -29,13 +31,33 @@ def register(request):
 @login_required
 def profile(request):
     my_purchases = Purchase.objects.filter(buyer=request.user).order_by('-sale_date')
+    seller_earnings = Purchase.objects.filter(seller=request.user).aggregate(total=Sum('sale_price'))['total'] or 0
+    buyer_spent = my_purchases.aggregate(total=Sum('sale_price'))['total'] or 0
 
     context = {
         'user': request.user,
         'my_purchases': my_purchases,
         'active_mode': get_active_mode(request),
+        'seller_earnings': seller_earnings,
+        'buyer_spent': buyer_spent,
     }
     return render(request, 'accounts/profile.html', context)
+
+
+@login_required
+def public_profile(request, username):
+    profile_user = get_object_or_404(get_user_model(), username=username)
+    seller_books = Book.objects.filter(seller=profile_user)
+    sold_count = Purchase.objects.filter(seller=profile_user).count()
+    purchase_count = Purchase.objects.filter(buyer=profile_user).count()
+
+    context = {
+        'profile_user': profile_user,
+        'sold_count': sold_count,
+        'active_listings_count': seller_books.filter(is_sold=False, is_active=True).count(),
+        'purchase_count': purchase_count,
+    }
+    return render(request, 'accounts/public_profile.html', context)
 
 
 @login_required

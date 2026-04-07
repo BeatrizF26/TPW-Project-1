@@ -2,88 +2,240 @@
 
 {% block content %}
 <style>
-    /* Botão Confirmar */
+    .confirm-page {
+        max-width: 540px;
+        margin: 4rem auto;
+        padding: 0 1.5rem;
+    }
+
+    .confirm-card {
+        background:
+            radial-gradient(circle at top left, rgba(46, 196, 182, 0.12), transparent 40%),
+            linear-gradient(155deg, #ffffff 0%, #f7fbfc 100%);
+        border: 1px solid rgba(36, 50, 63, 0.08);
+        border-radius: 28px;
+        box-shadow: 0 24px 60px rgba(17, 24, 39, 0.12);
+        padding: 3rem 2.5rem;
+        text-align: center;
+    }
+
+    .confirm-icon-wrapper {
+        width: 76px;
+        height: 76px;
+        border-radius: 20px;
+        background: rgba(46, 196, 182, 0.12);
+        color: var(--primarydark, #1f6f8b);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+    }
+
+    .confirm-title {
+        margin: 0 0 0.5rem;
+        font-size: 1.85rem;
+        color: var(--dark);
+        line-height: 1.2;
+    }
+
+    .confirm-subtitle {
+        margin: 0 0 2.5rem;
+        color: #6f8291;
+        font-size: 1.05rem;
+        line-height: 1.6;
+    }
+
+    .book-summary {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(36, 50, 63, 0.08);
+        border-radius: 18px;
+        padding: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+        text-align: left;
+    }
+
+    .book-summary-img {
+        width: 76px;
+        height: 104px;
+        border-radius: 10px;
+        object-fit: cover;
+        box-shadow: 0 8px 20px rgba(17, 24, 39, 0.1);
+        flex-shrink: 0;
+    }
+
+    .book-summary-fallback {
+        width: 76px;
+        height: 104px;
+        border-radius: 10px;
+        background: linear-gradient(145deg, rgba(31, 111, 139, 0.1), rgba(46, 196, 182, 0.2));
+        display: grid;
+        place-items: center;
+        color: #1f6f8b;
+        flex-shrink: 0;
+    }
+
+    .book-summary-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .book-summary-title {
+        margin: 0 0 0.25rem;
+        font-size: 1.15rem;
+        color: var(--dark);
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .book-summary-price {
+        margin: 0 0 0.3rem;
+        color: var(--primarydark, #1f6f8b);
+        font-weight: 800;
+        font-size: 1.35rem;
+    }
+
+    .book-summary-seller {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #7d8e9a;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .confirm-form {
+        display: flex;
+        flex-direction: column;
+    }
+
     .btn-confirm {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
         background: var(--primary);
         color: white;
-        justify-content: center;
-        padding: 1rem;
-        font-size: 1.1rem;
+        padding: 1.05rem;
+        font-size: 1.05rem;
+        font-weight: 700;
+        font-family: inherit;
         width: 100%;
         border: none;
-        border-radius: 8px;
+        border-radius: 14px;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(46, 196, 182, 0.15);
     }
 
     .btn-confirm:hover {
-        background-color: var(--primarydark); /* Escurece para o primarydark */
+        background: var(--primarydark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(46, 196, 182, 0.25);
     }
 
-    /* Link Cancelar */
     .btn-cancel-link {
-        text-decoration: none;
+        display: inline-block;
+        margin-top: 1.25rem;
         color: #7f8c8d;
         font-weight: 600;
-        font-size: 0.9rem;
-        transition: color 0.3s ease;
-        display: inline-block;
-        margin-top: 0.5rem;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: color 0.2s ease;
     }
 
     .btn-cancel-link:hover {
-        color: var(--secondary) !important;
+        color: var(--dark);
+        text-decoration: underline;
+    }
+
+    .secure-badge {
+        margin-top: 1.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        color: #95a5a6;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    @media (max-width: 480px) {
+        .confirm-page {
+            margin: 2rem auto;
+        }
+        .confirm-card {
+            padding: 2rem 1.5rem;
+            border-radius: 24px;
+        }
+        .book-summary {
+            flex-direction: column;
+            text-align: center;
+            padding: 1.5rem;
+        }
+        .book-summary-seller {
+            justify-content: center;
+        }
     }
 </style>
 
-<div style="max-width: 500px; margin: 0rem auto;">
-    <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); text-align: center;">
+<div class="confirm-page">
+    <div class="confirm-card">
 
-        <div style="background: rgba(46, 196, 182, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-            <i data-lucide="shopping-cart" style="width: 30px; height: 30px; color: var(--primary);"></i>
+        <div class="confirm-icon-wrapper">
+            <i data-lucide="shopping-bag" style="width: 36px; height: 36px;"></i>
         </div>
 
-        <h2 style="margin-bottom: 1rem; color: var(--dark);">Confirm Purchase</h2>
-        <p style="color: #7f8c8d; margin-bottom: 2rem;">
-            Are you sure you want to buy <strong>{{ book.title }}</strong>?
+        <h2 class="confirm-title">Review your order</h2>
+        <p class="confirm-subtitle">
+            You're almost there! Please confirm your purchase below.
         </p>
 
-        <div style="background: var(--light); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; text-align: left;">
-            <div style="width: 60px; height: 80px; background: #ddd; border-radius: 4px; overflow: hidden; flex-shrink: 0;">
-                {% if book.image %}
-                    <img src="{{ book.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
-                {% else %}
-                    <div style="display: flex; align-items: center; justify-content: center; height: 100%;">📖</div>
-                {% endif %}
-            </div>
-            <div>
-                <h4 style="margin: 0; font-size: 1.1rem;">{{ book.title }}</h4>
-                <p style="margin: 0; color: var(--primary); font-weight: 700; font-size: 1.2rem;">{{ book.price }}€</p>
-                <p style="margin: 0; font-size: 0.85rem; color: #95a5a6;">Seller: {{ book.seller.username }}</p>
+        <div class="book-summary">
+            {% if book.image %}
+                <img src="{{ book.image.url }}" alt="{{ book.title }}" class="book-summary-img">
+            {% else %}
+                <div class="book-summary-fallback">
+                    <i data-lucide="book-open" style="width: 32px; height: 32px;"></i>
+                </div>
+            {% endif %}
+
+            <div class="book-summary-info">
+                <h4 class="book-summary-title">{{ book.title }}</h4>
+                <p class="book-summary-price">{{ book.price }}€</p>
+                <p class="book-summary-seller">
+                    <i data-lucide="store" style="width: 14px; height: 14px;"></i>
+                    Seller: <strong>{{ book.seller.username }}</strong>
+                </p>
             </div>
         </div>
 
-        <form method="POST">
+        <form method="POST" class="confirm-form">
             {% csrf_token %}
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <button type="submit" class="btn btn-confirm">
-                    Confirm & Pay
-                </button>
+            <button type="submit" class="btn-confirm">
+                Confirm & Pay
+                <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+            </button>
 
-                <a href="{% url 'book_detail' book.id %}" class="btn-cancel-link">
-                    Cancel and go back
-                </a>
-            </div>
+            <a href="{% url 'book_detail' book.id %}" class="btn-cancel-link">
+                Cancel and return to listing
+            </a>
         </form>
     </div>
 
-    <div style="margin-top: 1.5rem; text-align: center; color: #bdc3c7; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 5px;">
+    <div class="secure-badge">
         <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
         Secure transaction by BookMarket
     </div>
 </div>
 
 <script>
-    lucide.createIcons();
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
 </script>
 {% endblock %}

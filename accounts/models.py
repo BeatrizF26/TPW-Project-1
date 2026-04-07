@@ -8,6 +8,12 @@ class User(AbstractUser):
     is_buyer = models.BooleanField(default=True)
     phone_number = models.CharField(max_length=9, blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if self.is_staff:
+            self.is_buyer = False
+            self.is_seller = False
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.username
 

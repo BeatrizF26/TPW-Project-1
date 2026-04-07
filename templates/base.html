@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BookMarket - Buy and Sell Books</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
 
       :root {
         --primary: #2ec4b6;
@@ -23,128 +19,174 @@
       }
 
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family: Georgia, "Times New Roman", serif;
         background-color: var(--light);
         color: var(--text);
         line-height: 1.6;
       }
 
-      /* Navigation Bar */
+      /* ── Navbar ── */
       nav {
-        background: white;
-        padding: 1rem 2rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        border-bottom: 2px solid var(--primary);
-      }
-
-      nav {
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        padding: 0 2rem;
+        height: 64px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 1px 0 rgba(36, 50, 63, 0.08), 0 4px 20px rgba(36, 50, 63, 0.05);
       }
 
       .nav-brand {
-        font-size: 1.8rem;
+        font-size: 1.45rem;
         font-weight: 700;
-        color: var(--primary);
+        color: var(--primarydark);
         text-decoration: none;
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        flex-shrink: 0;
       }
 
-      .nav-brand:hover {
-        color: var(--secondary);
-      }
+      .nav-brand:hover { color: #1f6f8b; }
+
+      .nav-logo { width: 30px; height: 30px; object-fit: contain; }
 
       .nav-links {
         display: flex;
-        gap: 2rem;
+        gap: 0.15rem;
         align-items: center;
-      }
-
-      .nav-links a {
-        color: var(--text);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s ease;
-        border-radius: 6px;
-        padding: 0.5rem 1rem;
-      }
-
-      .nav-links a:hover {
-        color: var(--primary);
-        background-color: rgba(46, 196, 182, 0.1);
-      }
-
-      .nav-links .btn-logout {
-        background-color: var(--secondary);
-        color: white;
-      }
-
-      .nav-links .btn-logout:hover {
-        background-color: #ff5252;
-        color: white;
-      }
-
-      .nav-links .btn-primary {
-        background-color: var(--primary);
-        color: white;
-      }
-
-      .nav-links .btn-primary:hover {
-        background-color: #26a89e;
-        color: white;
       }
 
       .nav-item {
-        color: var(--text);
+        color: #4f6270;
         text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        border-radius: 6px;
-        padding: 0.5rem 1rem;
+        font-weight: 600;
+        font-size: 0.88rem;
+        border-radius: 10px;
+        padding: 0.48rem 0.72rem;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 5px;
         background: none;
         border: none;
         font-family: inherit;
-        font-size: 1rem;
         cursor: pointer;
-      }
-
-      .nav-item.with-indicator {
+        transition: color 0.15s, background 0.15s;
+        white-space: nowrap;
         position: relative;
       }
 
+      .nav-item:hover { color: var(--primarydark) !important; background: rgba(46,196,182,0.1); }
+      .nav-item.active { color: var(--primarydark) !important; background: rgba(46,196,182,0.14); }
+
+      .nav-item.nav-logout { color: #c0392b; }
+      .nav-item.nav-logout:hover { color: #c0392b !important; background: rgba(192,57,43,0.08); }
+
+      .nav-divider { width: 1px; height: 20px; background: rgba(36,50,63,0.1); margin: 0 0.2rem; flex-shrink: 0; }
+
       .nav-indicator {
         position: absolute;
-        top: 8px;
-        right: 10px;
-        width: 10px;
-        height: 10px;
+        top: 5px; right: 5px;
+        width: 7px; height: 7px;
         border-radius: 50%;
         background: var(--secondary);
         border: 2px solid white;
       }
 
-      .nav-item:hover {
-        color: var(--primary) !important;
-        background-color: rgba(46, 196, 182, 0.1);
+      /* Hamburger */
+      .nav-hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 8px;
       }
 
-      /* Container */
+      .nav-hamburger span {
+        display: block;
+        width: 22px; height: 2px;
+        background: var(--text);
+        border-radius: 2px;
+        transition: all 0.2s;
+      }
+
+      /* Mobile drawer */
+      .nav-drawer {
+        display: none;
+        position: fixed;
+        inset: 64px 0 0 0;
+        background: rgba(255,255,255,0.97);
+        backdrop-filter: blur(14px);
+        z-index: 99;
+        padding: 1rem 1.5rem 2rem;
+        flex-direction: column;
+        gap: 0.2rem;
+        overflow-y: auto;
+        border-top: 1px solid rgba(36,50,63,0.08);
+      }
+
+      .nav-drawer.open { display: flex; }
+      .nav-drawer .nav-item { font-size: 1rem; padding: 0.75rem 1rem; }
+      .nav-drawer .nav-divider { width: 100%; height: 1px; margin: 0.3rem 0; }
+
+      /* Mode FAB */
+      .mode-fab {
+        position: fixed;
+        bottom: 1.5rem; right: 1.5rem;
+        z-index: 200;
+        width: 50px; height: 50px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 20px rgba(36,50,63,0.2);
+        transition: transform 0.18s, box-shadow 0.18s;
+        text-decoration: none;
+        font-family: inherit;
+      }
+
+      .mode-fab:hover { transform: scale(1.1); box-shadow: 0 10px 28px rgba(36,50,63,0.26); }
+      .mode-fab.to-seller { background: linear-gradient(135deg, var(--primarydark), #1f6f8b); color: white; }
+      .mode-fab.to-buyer  { background: linear-gradient(135deg, #1f6f8b, #155e75); color: white; }
+
+      .mode-fab-tooltip {
+        position: fixed;
+        bottom: 4.6rem; right: 1.5rem;
+        background: rgba(26,26,26,0.88);
+        color: white;
+        font-size: 0.76rem;
+        font-weight: 700;
+        padding: 0.32rem 0.65rem;
+        border-radius: 8px;
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transform: translateY(4px);
+        transition: opacity 0.18s, transform 0.18s;
+        z-index: 201;
+        font-family: Georgia, serif;
+      }
+
+      .mode-fab:hover + .mode-fab-tooltip { opacity: 1; transform: translateY(0); }
+
+      /* ── Container ── */
       .container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 3rem 2rem;
       }
 
-      /* Buttons */
+      /* ── Buttons ── */
       .btn {
         display: inline-flex;
         align-items: center;
@@ -171,27 +213,12 @@
         box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3);
       }
 
-      /* Headings */
-      h1 {
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-        color: var(--dark);
-        font-weight: 700;
-      }
+      /* ── Headings ── */
+      h1 { font-size: 2.5rem; margin-bottom: 2rem; color: var(--dark); font-weight: 700; }
+      h2 { font-size: 2rem; margin-bottom: 1.5rem; color: var(--dark); }
+      h3 { font-size: 1.3rem; color: var(--text); margin-bottom: 0.5rem; }
 
-      h2 {
-        font-size: 2rem;
-        margin-bottom: 1.5rem;
-        color: var(--dark);
-      }
-
-      h3 {
-        font-size: 1.3rem;
-        color: var(--text);
-        margin-bottom: 0.5rem;
-      }
-
-      /* Grid Layout */
+      /* ── Book grid ── */
       .books-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -199,161 +226,177 @@
         margin-top: 2rem;
       }
 
-      /* Book Card */
       .book {
         background: white;
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         transition: all 0.3s ease;
         cursor: pointer;
         display: flex;
         flex-direction: column;
       }
 
-      .book:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-      }
+      .book:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
 
       .book-image {
-        width: 100%;
-        height: 200px;
+        width: 100%; height: 200px;
         background: linear-gradient(135deg, var(--primary), var(--secondary));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 3rem;
-        color: white;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 3rem; color: white;
       }
 
-      .book-content {
-        padding: 1.5rem;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-      }
+      .book-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
+      .book-title { font-size: 1.2rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; line-height: 1.4; }
+      .book-author { color: #7f8c8d; font-size: 0.9rem; margin-bottom: 1rem; }
+      .book-price { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-top: auto; }
+      .book-price::after { content: "€"; }
 
-      .book-title {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: var(--dark);
-        margin-bottom: 0.5rem;
-        line-height: 1.4;
-      }
+      /* ── Empty state ── */
+      .empty-state { text-align: center; padding: 4rem 2rem; }
+      .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
+      .empty-state p { font-size: 1.2rem; color: #7f8c8d; }
 
-      .book-author {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-      }
-
-      .book-price {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary);
-        margin-top: auto;
-      }
-
-      .book-price::after {
-        content: "€";
-      }
-
-      /* Empty State */
-      .empty-state {
-        text-align: center;
-        padding: 4rem 2rem;
-      }
-
-      .empty-state-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-      }
-
-      .empty-state p {
-        font-size: 1.2rem;
-        color: #7f8c8d;
-      }
-
-      /* Responsive */
+      /* ── Responsive ── */
       @media (max-width: 768px) {
-        .books-grid {
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-          gap: 1.5rem;
-        }
-
-        h1 {
-          font-size: 1.8rem;
-        }
-
-        nav {
-          flex-direction: column;
-          gap: 1rem;
-          padding: 1rem;
-        }
-
-        .nav-links {
-          width: 100%;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
+        .books-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+        h1 { font-size: 1.8rem; }
+        nav { padding: 0 1.25rem; }
+        .nav-links { display: none; }
+        .nav-hamburger { display: flex; }
+        .container { padding: 2rem 1.25rem; }
       }
     </style>
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
   <body>
     <nav>
-      <a href="{% url 'book_list' %}" class="nav-brand">📚 BookMarket</a>
+      <a href="{% url 'book_list' %}" class="nav-brand">
+        <img src="/media/icon.png" alt="BookMarket logo" class="nav-logo" />
+        BookMarket
+      </a>
+
+      <!-- Desktop links -->
       <div class="nav-links">
-        {% if user.is_authenticated %}
-        <a href="/accounts/profile/" class="nav-item">
-          <i data-lucide="user" style="width: 18px; height: 18px;"></i>
-          <span>Hi, <strong>{{ user.username }}</strong></span>
+        <a href="{% url 'book_list' %}" class="nav-item {% if request.resolver_match.url_name == 'book_list' %}active{% endif %}">
+          <i data-lucide="house" style="width:16px;height:16px;"></i> Home
         </a>
 
-        <a href="{% url 'inbox' %}" class="nav-item {% if has_unread_messages %}with-indicator{% endif %}">
-          <i data-lucide="message-square" style="width: 18px; height: 18px;"></i>
-          <span>Messages</span>
-          {% if has_unread_messages %}
-            <span class="nav-indicator"></span>
-          {% endif %}
+        {% if user.is_authenticated %}
+        {% if not user.is_staff %}
+        <a href="/accounts/profile/" class="nav-item {% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'edit_profile' or request.resolver_match.url_name == 'upgrade_to_seller' or request.resolver_match.url_name == 'upgrade_to_buyer' %}active{% endif %}">
+          <i data-lucide="user" style="width:16px;height:16px;"></i> Profile
+        </a>
+
+        <a href="{% url 'inbox' %}" class="nav-item {% if request.resolver_match.url_name == 'inbox' or request.resolver_match.url_name == 'view_chat' %}active{% endif %}">
+          <i data-lucide="message-square" style="width:16px;height:16px;"></i> Messages
+          {% if has_unread_messages %}<span class="nav-indicator"></span>{% endif %}
         </a>
 
         {% if user.is_buyer and active_mode == buyer_mode %}
-        <a href="{% url 'my_purchases' %}" class="nav-item">
-          <i data-lucide="shopping-bag" style="width: 18px; height: 18px;"></i>
-          <span>Purchases</span>
+        <div class="nav-divider"></div>
+        <a href="{% url 'my_favorites' %}" class="nav-item {% if request.resolver_match.url_name == 'my_favorites' %}active{% endif %}">
+          <i data-lucide="heart" style="width:16px;height:16px;"></i> Favorites
+        </a>
+        <a href="{% url 'my_purchases' %}" class="nav-item {% if request.resolver_match.url_name == 'my_purchases' or request.resolver_match.url_name == 'confirm_purchase' or request.resolver_match.url_name == 'leave_review' %}active{% endif %}">
+          <i data-lucide="shopping-bag" style="width:16px;height:16px;"></i> Purchases
         </a>
         {% endif %}
 
         {% if user.is_seller and active_mode == seller_mode %}
-          <a href="{% url 'seller_dashboard' %}" class="nav-item">
-            <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i>
-            <span>Dashboard</span>
-          </a>
+        <div class="nav-divider"></div>
+        <a href="{% url 'seller_dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'seller_dashboard' %}active{% endif %}">
+          <i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard
+        </a>
+        {% endif %}
         {% endif %}
 
-        {% if user.is_buyer and user.is_seller %}
-          <a href="{% url 'toggle_account_mode' %}" class="nav-item">
-            <i data-lucide="repeat" style="width: 18px; height: 18px;"></i>
-            <span>{% if active_mode == seller_mode %}Go to Buyer View{% else %}Go to Seller View{% endif %}</span>
-          </a>
+        {% if user.is_staff %}
         {% endif %}
 
-        <form method="post" action="/accounts/logout/" style="display: inline">
-            {% csrf_token %}
-            <button type="submit" class="nav-item">
-              <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
-              <span>Logout</span>
-            </button>
+        <div class="nav-divider"></div>
+        <form method="post" action="/accounts/logout/" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="nav-item nav-logout">
+            <i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout
+          </button>
         </form>
         {% endif %}
       </div>
+
+      <!-- Hamburger (mobile) -->
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
     </nav>
 
+    <!-- Mobile drawer -->
+    <div class="nav-drawer" id="nav-drawer">
+      <a href="{% url 'book_list' %}" class="nav-item {% if request.resolver_match.url_name == 'book_list' %}active{% endif %}">
+        <i data-lucide="house" style="width:18px;height:18px;"></i> Home
+      </a>
+
+      {% if user.is_authenticated %}
+      {% if not user.is_staff %}
+      <a href="/accounts/profile/" class="nav-item {% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'edit_profile' %}active{% endif %}">
+        <i data-lucide="user" style="width:18px;height:18px;"></i> Profile
+      </a>
+      <a href="{% url 'inbox' %}" class="nav-item {% if request.resolver_match.url_name == 'inbox' or request.resolver_match.url_name == 'view_chat' %}active{% endif %}">
+        <i data-lucide="message-square" style="width:18px;height:18px;"></i> Messages
+        {% if has_unread_messages %}<span class="nav-indicator"></span>{% endif %}
+      </a>
+
+      {% if user.is_buyer and active_mode == buyer_mode %}
+      <div class="nav-divider"></div>
+      <a href="{% url 'my_favorites' %}" class="nav-item {% if request.resolver_match.url_name == 'my_favorites' %}active{% endif %}">
+        <i data-lucide="heart" style="width:18px;height:18px;"></i> Favorites
+      </a>
+      <a href="{% url 'my_purchases' %}" class="nav-item {% if request.resolver_match.url_name == 'my_purchases' or request.resolver_match.url_name == 'confirm_purchase' or request.resolver_match.url_name == 'leave_review' %}active{% endif %}">
+        <i data-lucide="shopping-bag" style="width:18px;height:18px;"></i> Purchases
+      </a>
+      {% endif %}
+
+      {% if user.is_seller and active_mode == seller_mode %}
+      <div class="nav-divider"></div>
+      <a href="{% url 'seller_dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'seller_dashboard' %}active{% endif %}">
+        <i data-lucide="layout-dashboard" style="width:18px;height:18px;"></i> Dashboard
+      </a>
+      {% endif %}
+      {% endif %}
+
+      {% if user.is_staff %}
+      {% endif %}
+
+      <div class="nav-divider"></div>
+      <form method="post" action="/accounts/logout/">
+        {% csrf_token %}
+        <button type="submit" class="nav-item nav-logout">
+          <i data-lucide="log-out" style="width:18px;height:18px;"></i> Logout
+        </button>
+      </form>
+      {% endif %}
+    </div>
+
+    <!-- Mode switch FAB -->
+    {% if user.is_authenticated and not user.is_staff and user.is_buyer and user.is_seller %}
+    <a href="{% url 'toggle_account_mode' %}" class="mode-fab {% if active_mode == seller_mode %}to-buyer{% else %}to-seller{% endif %}">
+      <i data-lucide="{% if active_mode == seller_mode %}user{% else %}store{% endif %}" style="width:22px;height:22px;"></i>
+    </a>
+    <span class="mode-fab-tooltip">{% if active_mode == seller_mode %}Switch to Buyer{% else %}Switch to Seller{% endif %}</span>
+    {% endif %}
+
     <div class="container">{% block content %}{% endblock %}</div>
+
     <script>
       lucide.createIcons();
+
+      const hamburger = document.getElementById('nav-hamburger');
+      const drawer = document.getElementById('nav-drawer');
+      hamburger.addEventListener('click', () => drawer.classList.toggle('open'));
+      // close drawer on link click
+      drawer.querySelectorAll('a, button[type="submit"]').forEach(el => {
+        el.addEventListener('click', () => drawer.classList.remove('open'));
+      });
     </script>
   </body>
 </html>
