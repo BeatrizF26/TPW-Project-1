@@ -432,7 +432,8 @@
 
       <div class="form-grid">
         {% for field in form %}
-        <div class="form-group {% if field.name == 'role' or field.name == 'email' %}span-2{% endif %}">
+        <div class="form-group {% if field.name == 'role' or field.name == 'email' or field.name == 'iban' %}span-2{% endif %}"
+          {% if field.name == 'iban' %}id="iban-container" style="display: none;"{% endif %}>
           {% if field.name == 'role' %}
             <div class="role-card">
               <label>
@@ -472,5 +473,36 @@
     </div>
   </div>
 </section>
+
+
+<script>
+  function toggleIbanField() {
+    const roleRadios = document.querySelectorAll('input[name="role"]');
+    const ibanContainer = document.getElementById('iban-container');
+    const ibanInput = document.querySelector('input[name="iban"]');
+
+    let selectedRole = '';
+    roleRadios.forEach(radio => {
+      if (radio.checked) selectedRole = radio.value;
+    });
+
+    if (selectedRole === 'seller') {
+      ibanContainer.style.display = 'block';
+      if (ibanInput) ibanInput.required = true;
+    } else {
+      ibanContainer.style.display = 'none';
+      if (ibanInput) {
+        ibanInput.required = false;
+        ibanInput.value = '';
+      }
+    }
+  }
+
+  document.querySelectorAll('input[name="role"]').forEach(radio => {
+    radio.addEventListener('change', toggleIbanField);
+  });
+
+  document.addEventListener('DOMContentLoaded', toggleIbanField);
+</script>
 
 {% endblock %}

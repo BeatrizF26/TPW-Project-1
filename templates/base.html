@@ -278,9 +278,11 @@
 
       <!-- Desktop links -->
       <div class="nav-links">
+        {% if request.resolver_match.url_name != 'register' %}
         <a href="{% url 'book_list' %}" class="nav-item {% if request.resolver_match.url_name == 'book_list' %}active{% endif %}">
           <i data-lucide="house" style="width:16px;height:16px;"></i> Home
         </a>
+        {% endif %}
 
         {% if user.is_authenticated %}
         {% if not user.is_staff %}
@@ -332,9 +334,11 @@
 
     <!-- Mobile drawer -->
     <div class="nav-drawer" id="nav-drawer">
+      {% if request.resolver_match.url_name != 'register' %}
       <a href="{% url 'book_list' %}" class="nav-item {% if request.resolver_match.url_name == 'book_list' %}active{% endif %}">
         <i data-lucide="house" style="width:18px;height:18px;"></i> Home
       </a>
+      {% endif %}
 
       {% if user.is_authenticated %}
       {% if not user.is_staff %}

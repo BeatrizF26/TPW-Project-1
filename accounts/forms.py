@@ -25,10 +25,30 @@ class RegisterForm(UserCreationForm):
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     phone_number = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    iban = forms.CharField(
+        required=False,
+        label="IBAN",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'PT50 0002 0123 1234 5678 9015 4'
+        })
+    )
+
+    field_order = [
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+        'phone_number',
+        'password1',
+        'password2',
+        'iban',
+        'role'
+    ]
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'phone_number']
+        fields = ['username', 'email', 'first_name', 'last_name', 'phone_number', 'iban']
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -44,6 +64,11 @@ class RegisterForm(UserCreationForm):
 
         if commit:
             user.save()
+
+            if user.is_seller:
+                iban_value = self.cleaned_data.get('iban')
+                user.seller_profile.iban = iban_value
+                user.seller_profile.save()
         return user
 
 
