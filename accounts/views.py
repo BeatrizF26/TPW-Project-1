@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Avg, Sum
 from books.models import Purchase, Book
+from books.models import Review
 from .mode import BUYER_MODE, SELLER_MODE, get_active_mode, set_active_mode
 from .forms import (
     RegisterForm,
@@ -57,6 +58,19 @@ def public_profile(request, username):
         'active_listings_count': seller_books.filter(is_sold=False, is_active=True).count(),
         'purchase_count': purchase_count,
     }
+
+    if request.user.is_staff or request.user.is_superuser:
+        context.update({
+            'total_listings_count': seller_books.count(),
+            'disabled_listings_count': seller_books.filter(is_sold=False, is_active=False).count(),
+            'seller_revenue': Purchase.objects.filter(seller=profile_user).aggregate(total=Sum('sale_price'))['total'] or 0,
+            'buyer_spent': Purchase.objects.filter(buyer=profile_user).aggregate(total=Sum('sale_price'))['total'] or 0,
+            'reviews_received_count': Review.objects.filter(book__seller=profile_user).count(),
+            'avg_review_rating': Review.objects.filter(book__seller=profile_user).aggregate(a=Avg('rating'))['a'] or 0,
+            'recent_sales': Purchase.objects.filter(seller=profile_user).select_related('book', 'buyer').order_by('-sale_date')[:5],
+            'recent_purchases': Purchase.objects.filter(buyer=profile_user).select_related('book', 'seller').order_by('-sale_date')[:5],
+        })
+
     return render(request, 'accounts/public_profile.html', context)
 
 

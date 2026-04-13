@@ -260,7 +260,11 @@
         <tbody>
           {% for u in users %}
           <tr>
-            <td style="font-weight:600;">{{ u.username }}</td>
+            <td style="font-weight:600;">
+              <a href="{% url 'public_profile' u.username %}" style="color:inherit;text-decoration:none;">
+                {{ u.username }}
+              </a>
+            </td>
             <td style="color:#6f8291;">{{ u.email|default:"—" }}</td>
             <td>
               {% if u.is_staff %}<span class="role-badge staff">staff</span>{% endif %}

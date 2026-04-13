@@ -115,6 +115,185 @@
     flex-wrap: wrap;
   }
 
+  .public-admin {
+    --paper: #fcfefd;
+    --ink: var(--text, #2c3e50);
+    --muted: #6f8291;
+    --line: rgba(36, 50, 63, 0.10);
+    --accent: var(--primary, #2ec4b6);
+    --accent-strong: var(--primarydark, #29b0a3);
+    padding: 1.55rem 1.65rem;
+    border-radius: 28px;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    background:
+      radial-gradient(circle at top left, rgba(46, 196, 182, 0.18), transparent 34%),
+      linear-gradient(160deg, #eefaf8 0%, #f8fbfc 100%);
+    box-shadow: 0 20px 46px rgba(36, 50, 63, 0.10);
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--ink);
+  }
+
+  .public-admin-toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.15rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .public-admin-toolbar-left {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .public-admin-titlewrap {
+    min-width: 0;
+  }
+
+  .public-admin-title {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 1.25rem;
+    line-height: 1.05;
+  }
+
+  .public-admin-subtitle {
+    margin: 0.35rem 0 0;
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 0.92rem;
+  }
+
+  .public-admin-sections {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  .public-admin-section {
+    padding: 1.05rem 1.2rem 1.15rem;
+    border-radius: 24px;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 252, 0.96));
+    box-shadow: 0 10px 26px rgba(36, 50, 63, 0.06);
+  }
+
+  .public-admin-section-title {
+    margin: 0 0 0.7rem;
+    font-size: 0.98rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--ink);
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid rgba(217, 228, 230, 0.9);
+  }
+
+  .public-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  .public-admin-kv {
+    padding: 0.95rem 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(36, 50, 63, 0.08);
+    background: rgba(255, 255, 255, 0.74);
+  }
+
+  .public-admin-k {
+    display: block;
+    color: #7d8e9a;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+  }
+
+  .public-admin-v {
+    display: block;
+    color: var(--ink);
+    font-weight: 700;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .public-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  .public-admin-table th,
+  .public-admin-table td {
+    padding: 0.6rem 0.7rem;
+    border-bottom: 1px solid rgba(36, 50, 63, 0.08);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .public-admin-table th {
+    color: #6f8291;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 800;
+  }
+
+  .public-admin-empty {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 0.5rem;
+    color: #7d8e9a;
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  .public-admin-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .public-admin-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .public-admin-actions.right {
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
+  .public-admin .public-btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+
+  .public-admin .public-btn.primary {
+    box-shadow: 0 16px 30px rgba(46, 196, 182, 0.22);
+  }
+
+  .public-admin .public-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .public-admin .public-btn.primary:hover {
+    box-shadow: 0 20px 36px rgba(46, 196, 182, 0.28);
+  }
+
   .public-btn {
     display: inline-flex;
     align-items: center;
@@ -140,6 +319,10 @@
     .public-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .public-admin-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 640px) {
@@ -164,6 +347,20 @@
     .public-grid {
       grid-template-columns: 1fr;
     }
+
+    .public-admin-toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .public-admin-actions.right {
+      margin-left: 0;
+      justify-content: flex-start;
+    }
+
+    .public-admin-footer {
+      justify-content: flex-start;
+    }
   }
 </style>
 
@@ -184,11 +381,20 @@
   </section>
 
   <section class="public-grid">
+    {# Always shown #}
     <article class="public-card">
       <span class="public-card-label">Reputation</span>
       <span class="public-card-value">{{ profile_user.seller_profile.seller_rating|floatformat:1 }}/5</span>
       <span class="public-card-note">Seller rating visible to other users.</span>
     </article>
+    <article class="public-card">
+      <span class="public-card-label">Member Since</span>
+      <span class="public-card-value">{{ profile_user.date_joined|date:"M Y" }}</span>
+      <span class="public-card-note">Date this account was created.</span>
+    </article>
+
+    {# Seller: Books Sold + Active Listings #}
+    {% if profile_user.is_seller %}
     <article class="public-card">
       <span class="public-card-label">Books Sold</span>
       <span class="public-card-value">{{ sold_count }}</span>
@@ -199,15 +405,211 @@
       <span class="public-card-value">{{ active_listings_count }}</span>
       <span class="public-card-note">Books currently live on the market.</span>
     </article>
+    {% endif %}
+
+    {# Buyer: Purchases + Money Spent #}
+    {% if profile_user.is_buyer %}
     <article class="public-card">
       <span class="public-card-label">Purchases</span>
       <span class="public-card-value">{{ purchase_count }}</span>
       <span class="public-card-note">Books bought with this account.</span>
     </article>
+    <article class="public-card">
+      <span class="public-card-label">Money Spent</span>
+      <span class="public-card-value">{{ buyer_spent|floatformat:2 }}€</span>
+      <span class="public-card-note">Total spent through BookMarket.</span>
+    </article>
+    {% endif %}
   </section>
 
+  {% if request.user.is_staff or request.user.is_superuser %}
+  <section class="public-admin">
+    <div class="public-admin-toolbar">
+      <div class="public-admin-toolbar-left">
+        <div class="public-admin-titlewrap">
+          <h2 class="public-admin-title">
+            <i data-lucide="shield" style="width: 18px; height: 18px;"></i>
+            Staff View
+          </h2>
+          <p class="public-admin-subtitle">Admin-only details to audit this account.</p>
+        </div>
+      </div>
+      <div class="public-admin-actions right">
+        <a class="public-btn primary" href="{% url 'admin:accounts_user_change' profile_user.id %}">Open in Django Admin</a>
+      </div>
+    </div>
+
+    <div class="public-admin-sections">
+      <div class="public-admin-section">
+        <h3 class="public-admin-section-title">
+          <i data-lucide="id-card" style="width: 16px; height: 16px;"></i>
+          General
+        </h3>
+        <div class="public-admin-grid">
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Email</span>
+            <span class="public-admin-v">{{ profile_user.email|default:"—" }}</span>
+          </div>
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Phone</span>
+            <span class="public-admin-v">{{ profile_user.phone_number|default:"—" }}</span>
+          </div>
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Flags</span>
+            <span class="public-admin-v">
+              active={{ profile_user.is_active|yesno:"yes,no" }},
+              staff={{ profile_user.is_staff|yesno:"yes,no" }},
+              superuser={{ profile_user.is_superuser|yesno:"yes,no" }},
+              buyer={{ profile_user.is_buyer|yesno:"yes,no" }},
+              seller={{ profile_user.is_seller|yesno:"yes,no" }}
+            </span>
+          </div>
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Last Login</span>
+            <span class="public-admin-v">{{ profile_user.last_login|date:"d M Y, H:i"|default:"Never" }}</span>
+          </div>
+        </div>
+      </div>
+
+      {% if profile_user.is_buyer %}
+      <div class="public-admin-section">
+        <h3 class="public-admin-section-title">
+          <i data-lucide="shopping-bag" style="width: 16px; height: 16px;"></i>
+          Buyer
+        </h3>
+        <div class="public-admin-grid">
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Buyer Spent</span>
+            <span class="public-admin-v">{{ buyer_spent|floatformat:2 }}€</span>
+          </div>
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Address</span>
+            <span class="public-admin-v">{{ profile_user.buyer_profile.address|default:"—" }}</span>
+          </div>
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Favorite Genres</span>
+            <span class="public-admin-v">{{ profile_user.buyer_profile.favorite_genres|default:"—" }}</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if profile_user.is_seller %}
+      <div class="public-admin-section">
+        <h3 class="public-admin-section-title">
+          <i data-lucide="store" style="width: 16px; height: 16px;"></i>
+          Seller
+        </h3>
+        <div class="public-admin-grid">
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Seller Revenue</span>
+            <span class="public-admin-v">{{ seller_revenue|floatformat:2 }}€</span>
+          </div>
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Listings</span>
+            <span class="public-admin-v">
+              total={{ total_listings_count|default:"0" }},
+              active={{ active_listings_count|default:"0" }},
+              disabled={{ disabled_listings_count|default:"0" }},
+              sold={{ sold_count|default:"0" }}
+            </span>
+          </div>
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Seller IBAN</span>
+            <span class="public-admin-v">{{ profile_user.seller_profile.iban|default:"—" }}</span>
+          </div>
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Reviews Received</span>
+            <span class="public-admin-v">
+              count={{ reviews_received_count|default:"0" }},
+              avg={{ avg_review_rating|floatformat:1 }}/5
+            </span>
+          </div>
+          <div class="public-admin-kv">
+            <span class="public-admin-k">Seller Rating (Public)</span>
+            <span class="public-admin-v">{{ profile_user.seller_profile.seller_rating|floatformat:1 }}/5</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="public-admin-section">
+        <h3 class="public-admin-section-title">
+          <i data-lucide="activity" style="width: 16px; height: 16px;"></i>
+          Activity
+        </h3>
+
+        {% if recent_sales %}
+        <table class="public-admin-table">
+          <thead>
+            <tr>
+              <th colspan="4">Recent Sales (as seller)</th>
+            </tr>
+            <tr>
+              <th>When</th>
+              <th>Book</th>
+              <th>Buyer</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in recent_sales %}
+            <tr>
+              <td style="color:#6f8291;">{{ p.sale_date|date:"d M Y, H:i" }}</td>
+              <td>{{ p.book.title }}</td>
+              <td>@{{ p.buyer.username }}</td>
+              <td style="font-weight:700;">{{ p.sale_price|floatformat:2 }}€</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+
+        {% if recent_purchases %}
+        <table class="public-admin-table">
+          <thead>
+            <tr>
+              <th colspan="4">Recent Purchases (as buyer)</th>
+            </tr>
+            <tr>
+              <th>When</th>
+              <th>Book</th>
+              <th>Seller</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in recent_purchases %}
+            <tr>
+              <td style="color:#6f8291;">{{ p.sale_date|date:"d M Y, H:i" }}</td>
+              <td>{{ p.book.title }}</td>
+              <td>@{{ p.seller.username }}</td>
+              <td style="font-weight:700;">{{ p.sale_price|floatformat:2 }}€</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+
+        {% if not recent_sales and not recent_purchases %}
+        <div class="public-admin-empty">
+          <i data-lucide="inbox" style="width: 16px; height: 16px; flex-shrink: 0;"></i>
+          No activity yet — this user has no sales or purchases on record.
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="public-admin-footer">
+      <a class="public-btn primary" href="{% url 'admin_dashboard' %}">Back to Admin Dashboard</a>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if not request.user.is_staff and not request.user.is_superuser %}
   <div class="public-actions">
     <a href="{% url 'inbox' %}" class="public-btn secondary">Back to Messages</a>
   </div>
+  {% endif %}
 </section>
 {% endblock %}
